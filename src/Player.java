@@ -43,6 +43,10 @@ public class Player extends Creature{
 		return plantBuff;
 	}
 
+	/**
+	 * 
+	 * @param newBuff - plantbuff in seconds
+	 */
 	public void addPlantBuff(int newBuff) {
 		this.plantBuff+=newBuff;
 	}

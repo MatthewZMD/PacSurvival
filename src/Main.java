@@ -160,9 +160,9 @@ public class Main {
             for(int x = 0;x<walLines.length;x++){
                 for(int y = 0;y<2;y++){
                     if(walLines[x][2]==1){
-                        g.setColor(new Color(0,0,153));
+                        g.setColor(new Color(64,64,64));
                     }else{
-                        g.setColor(new Color(0,0,255));
+                        g.setColor(new Color(160,160,160));
                     }
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
@@ -185,7 +185,7 @@ public class Main {
                 double oldPlaneX = planeX;
                 planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
                 planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
-                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
             }else if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
                 double oldDirX = player.getDirX();
                 player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
@@ -193,7 +193,7 @@ public class Main {
                 double oldPlaneX = planeX;
                 planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
                 planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
-                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
             }
             if(key==KeyEvent.VK_UP||key==KeyEvent.VK_W){
                 if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] == 0){
@@ -202,7 +202,7 @@ public class Main {
                 if(map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] == 0){
                     player.setY(player.getY()+(player.getDirY()*moveSpeed));
                 }
-                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
             }else if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
                 if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] == 0){
                     player.setX(player.getX()-(player.getDirX()*moveSpeed));
@@ -210,7 +210,7 @@ public class Main {
                 if(map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] == 0){
                     player.setY(player.getY()-(player.getDirY()*moveSpeed));
                 }
-                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
             }
         }
 

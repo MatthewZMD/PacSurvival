@@ -1,7 +1,9 @@
+import java.util.ArrayList;
+
 public class CheckDeath implements Runnable{
 
 	public void run(){
-//		ArrayList<Organism> organisms; 
+		ArrayList<Organism> organisms = null;
 		for(int i = 0; i < organisms.size(); i++){
 			Organism o = organisms.get(i);
 			if(o instanceof Creature){

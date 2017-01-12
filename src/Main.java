@@ -1,48 +1,40 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
-    public static int[][] map =
-    {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-        {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-        {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-    };
+    public static int[][] map;
+    public static int[][]walLines;
+
     public static JFrame window = new JFrame("Survival");
+    public static World world = new World();
 
-    public static void main(String[] args) {
-        //Create user object
-        Player player = new Player(map.length/2,map[0].length/2,-1,0);
+    //Create player object
+    public static Player player = new Player("MT",64,138,-1,0,3);
 
-        //the 2d raycaster version of camera plane
-        double planeX = 0, planeY = 0.66;
+    //the 2d raycaster version of camera plane
+    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.05;
+
+    public static void main(String[] args) throws FileNotFoundException {
+
+        readMap();
 
         double time = 0; //time of current frame
         double oldTime = 0; //time of previous frame
         boolean run = true;
 
-        window.setSize(400,300);
+        window.setSize(1280,900);
+        window.getContentPane().add(world);
+        window.addKeyListener(new keyListener());
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setVisible(true);
 
+        walLines = new int[window.getWidth()][3];
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
         while(run){
@@ -125,8 +117,110 @@ public class Main {
                 if(drawEnd >= window.getHeight()){
                     drawEnd = window.getHeight() - 1;
                 }
+                walLines[x][0] = drawStart;
+                walLines[x][1] = drawEnd;
+                walLines[x][2] = side;
 
+            }
+            oldTime = time;
+//            time = System.currentTimeMillis();
+//            double frameTime = (time - oldTime)/1000;
+//            System.out.println(1/frameTime);
+            window.repaint();
+//            run = false;
+        }
+    }
+
+    public static void readMap() throws FileNotFoundException {
+        Scanner mapFile = new Scanner(new File("Map.txt"));
+        String line;
+        int width = 0,height = 0;
+        do{
+            line = mapFile.nextLine();
+//            System.out.println(line);
+            height++;
+        }while (mapFile.hasNextLine());
+        width = line.length();
+        System.out.println(width+"x"+height);
+        map = new int[height][width];
+        mapFile = new Scanner(new File("Map.txt"));
+        for(int i = 0;i<height;i++){
+            line = mapFile.nextLine();
+            for(int j = 0;j<width;j++){
+                map[i][j] = Character.getNumericValue(line.charAt(j));
+                System.out.print(map[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    public static class World extends JPanel {
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            for(int x = 0;x<walLines.length;x++){
+                for(int y = 0;y<2;y++){
+                    if(walLines[x][2]==1){
+                        g.setColor(new Color(0,0,153));
+                    }else{
+                        g.setColor(new Color(0,0,255));
+                    }
+                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
+                }
             }
         }
     }
+
+    private static class keyListener implements KeyListener {
+        double changeX,changeY;
+        int factor = 10;
+        @Override
+        public void keyPressed(KeyEvent e) {
+            //Get the key pressed
+            int key = e.getKeyCode();
+            if(key==KeyEvent.VK_RIGHT){
+                //both camera direction and camera plane are rotated
+                double oldDirX = player.getDirX();
+                player.setDirX(player.getDirX() * Math.cos(-rotSpeed) - player.getDirY() * Math.sin(-rotSpeed));
+                player.setDirY(oldDirX * Math.sin(-rotSpeed) + player.getDirY() * Math.cos(-rotSpeed));
+                double oldPlaneX = planeX;
+                planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
+                planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
+                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+            }else if(key==KeyEvent.VK_LEFT){
+                double oldDirX = player.getDirX();
+                player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
+                player.setDirY(oldDirX * Math.sin(rotSpeed) + player.getDirY() * Math.cos(rotSpeed));
+                double oldPlaneX = planeX;
+                planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
+                planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
+                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+            }
+            if(key==KeyEvent.VK_UP){
+                if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] == 0){
+                    player.setX(player.getX()+(player.getDirX()*moveSpeed));
+                }
+                if(map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] == 0){
+                    player.setY(player.getY()+(player.getDirY()*moveSpeed));
+                }
+                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+            }else if(key==KeyEvent.VK_DOWN){
+                if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] == 0){
+                    player.setX(player.getX()-(player.getDirX()*moveSpeed));
+                }
+                if(map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] == 0){
+                    player.setY(player.getY()-(player.getDirY()*moveSpeed));
+                }
+                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+        }
+        @Override
+        public void keyReleased(KeyEvent e) {
+//            System.out.println(false);
+        }
+    }
+
 }

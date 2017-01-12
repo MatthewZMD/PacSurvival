@@ -30,14 +30,14 @@ public class Walker extends Creature{
 	}
 	
 	public void makeBabies(){
-		double x,y;
+		int x,y;
 		do{
-			x = Math.random()*map[0].length; 
-			y = Math.random()*map.length; 
-		}while(map[x][y]!=0);
+			x = (int) (Math.random()*Main.map[0].length);
+			y = (int) (Math.random()*Main.map.length);
+		}while(Main.map[x][y]!=0);
 		
 		int gender = (int) (Math.random()*2+1);
-		new Walker(x, y, dirX, dirY, 3, gender);
+		new Walker(x, y, -1, 0, 3, gender);
 	}
 	
 }

@@ -14,10 +14,10 @@ public class Player extends Creature{
 	/**
 	* default constructor
 	* sets the variables of protagonist
-	* @param int x, int y, String name
+	* @param x, y, String name
 	* @return void
 	*/
-	Player(double x, double y, double dirX, double dirY, double health, String name){
+	Player(String name,double x, double y, double dirX, double dirY,int health){
 		super(x, y, dirX, dirY, health);
 		setName(name);
 		this.score = 0;

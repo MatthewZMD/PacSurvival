@@ -1,21 +1,23 @@
+import java.util.ArrayList;
+
 public class CheckCollision implements Runnable{
 
 	public void run() {
-//		ArrayList<Organism> organisms; 
+		ArrayList<Organism> organisms = null;
 		for(int i = 0; i < organisms.size(); i++){
 			Organism o = organisms.get(i);
 			
-			if(player.getX() == o.getX() && player.getY() == o.getY()){
+			if(Main.player.getX() == o.getX() && Main.player.getY() == o.getY()){
 				if(o instanceof Walker){
-					if(player.getPlantBuff()>0){
+					if(Main.player.getPlantBuff()>0){
 						System.out.println("You attacked the Walker at "+o.getX()+","+o.getY()+"!");
-						((Walker) o).addHealth(-1);
+						((Walker) o).updateHealth(-1);
 					}else{
-						player.addHealth(-1);
+						Main.player.updateHealth(-1);
 					}
 				}else if(o instanceof Plant){
-					player.addHealth(0.5);
-					player.addPlantBuff(30);
+					Main.player.updateHealth(0.5);
+					Main.player.addPlantBuff(30);
 					organisms.remove(i);
 				}
 			}

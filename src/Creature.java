@@ -30,13 +30,13 @@ abstract public class Creature extends Organism{
     public void setDirY(double dirY) {
         this.dirY = dirY;
     }
-	
+
 	/**
-	* setHealth
+	* updateHealth
 	* get class variable health
-	* @param int heatlth
+	* @param newHealth
 	*/
-	public void addHealth(double newHealth){
+	public void updateHealth(double newHealth){
 		this.health+=newHealth;
 	}
 	

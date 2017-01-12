@@ -141,16 +141,16 @@ public class Main {
             height++;
         }while (mapFile.hasNextLine());
         width = line.length();
-        System.out.println(width+"x"+height);
+//        System.out.println(width+"x"+height);
         map = new int[height][width];
         mapFile = new Scanner(new File("Map.txt"));
         for(int i = 0;i<height;i++){
             line = mapFile.nextLine();
             for(int j = 0;j<width;j++){
                 map[i][j] = Character.getNumericValue(line.charAt(j));
-                System.out.print(map[i][j]);
+//                System.out.print(map[i][j]);
             }
-            System.out.println();
+//            System.out.println();
         }
     }
 
@@ -177,7 +177,7 @@ public class Main {
         public void keyPressed(KeyEvent e) {
             //Get the key pressed
             int key = e.getKeyCode();
-            if(key==KeyEvent.VK_RIGHT){
+            if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_D){
                 //both camera direction and camera plane are rotated
                 double oldDirX = player.getDirX();
                 player.setDirX(player.getDirX() * Math.cos(-rotSpeed) - player.getDirY() * Math.sin(-rotSpeed));
@@ -186,7 +186,7 @@ public class Main {
                 planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
                 planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
                 System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
-            }else if(key==KeyEvent.VK_LEFT){
+            }else if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
                 double oldDirX = player.getDirX();
                 player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
                 player.setDirY(oldDirX * Math.sin(rotSpeed) + player.getDirY() * Math.cos(rotSpeed));
@@ -195,7 +195,7 @@ public class Main {
                 planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
                 System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
             }
-            if(key==KeyEvent.VK_UP){
+            if(key==KeyEvent.VK_UP||key==KeyEvent.VK_W){
                 if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] == 0){
                     player.setX(player.getX()+(player.getDirX()*moveSpeed));
                 }
@@ -203,7 +203,7 @@ public class Main {
                     player.setY(player.getY()+(player.getDirY()*moveSpeed));
                 }
                 System.out.println("Coordinates: "+player.getX()+","+player.getY());
-            }else if(key==KeyEvent.VK_DOWN){
+            }else if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
                 if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] == 0){
                     player.setX(player.getX()-(player.getDirX()*moveSpeed));
                 }

@@ -30,8 +30,6 @@ public class Main {
 
         readMap();
 
-        double time = 0; //time of current frame
-        double oldTime = 0; //time of previous frame
         boolean run = true;
 
         window.setSize(1280,    900);
@@ -142,10 +140,6 @@ public class Main {
                 walLines[x][2] = side;
 
             }
-            oldTime = time;
-//            time = System.currentTimeMillis();
-//            double frameTime = (time - oldTime)/1000;
-//            System.out.println(1/frameTime);
             window.repaint();
         }
     }

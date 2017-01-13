@@ -32,7 +32,7 @@ public class Main {
         double oldTime = 0; //time of previous frame
         boolean run = true;
 
-        window.setSize(1280,900);
+        window.setSize(1280,    900);
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

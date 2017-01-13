@@ -167,6 +167,12 @@ public class Main {
         }
     }
 
+    public static double elapsedSeconds(){
+        long currentTime = System.nanoTime();
+        return (currentTime - startTime) /1000000000.0;
+    }
+
+
     public static class World extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -234,6 +240,8 @@ public class Main {
         public void keyReleased(KeyEvent e) {
 //            System.out.println(false);
         }
+
+
     }
 
 }

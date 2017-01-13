@@ -20,9 +20,11 @@ public class Main {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.05;
 
-    public static ArrayList<Organism> organisms = null;
+    public static ArrayList<Organism> organisms = new ArrayList<>();
     //Matthew did this
     //Jim did this
+
+    public static long startTime;
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -43,10 +45,17 @@ public class Main {
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
 
+//        organisms.add(new Walker(0,0,0,0,3,1));
+//        System.out.println("Size: "+ organisms.size());
+
         Thread checkDeath = new Thread(new CheckDeath());
         checkDeath.start();
         Thread checkCollision = new Thread(new CheckCollision());
         checkCollision.start();
+
+        if(run){
+            startTime = System.nanoTime();
+        }
 
         while(run){
             for(int x = 0;x<window.getWidth();x++){
@@ -138,7 +147,6 @@ public class Main {
 //            double frameTime = (time - oldTime)/1000;
 //            System.out.println(1/frameTime);
             window.repaint();
-//            run = false;
         }
     }
 

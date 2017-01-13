@@ -1,8 +1,9 @@
 public class CheckCollision implements Runnable{
 
-	public void run() {
-		System.out.println("Checking Collision");
+	public synchronized void run() {
+//		System.out.println("Collisioning Size: "+Main.organisms.size());
 		for(int i = 0; i < Main.organisms.size(); i++){
+			System.out.println("Checking Collision");
 			Organism o = Main.organisms.get(i);
 			if(Main.player.getX() == o.getX() && Main.player.getY() == o.getY()){
 				if(o instanceof Walker){
@@ -19,6 +20,12 @@ public class CheckCollision implements Runnable{
 				}
 			}
 			
+		}
+		try{
+			//Thread.sleep(10);
+			Thread.yield();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 	}

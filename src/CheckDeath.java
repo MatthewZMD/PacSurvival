@@ -1,13 +1,22 @@
 public class CheckDeath implements Runnable{
 
-	public void run(){
+	public synchronized void run(){
+//		System.out.println("Deathing Size: "+Main.organisms.size());
 		for(int i = 0; i < Main.organisms.size(); i++){
+			System.out.println("Checking Death");
 			Organism o = Main.organisms.get(i);
-			if(o instanceof Creature){
-				if(((Creature) o).getHealth()<=0){
+			if(o instanceof Walker){
+				if(((Walker) o).getHealth()<=0){
 					Main.organisms.remove(i);
+					System.out.println("Walker died");
 				}
 			}
+		}
+		try{
+			//Thread.sleep(10);
+			Thread.yield();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

@@ -21,8 +21,8 @@ public class Main {
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.05;
 
     public static ArrayList<Organism> organisms = null;
-    //Jim did this
     //Matthew did this
+    //Jim did this
 
     public static void main(String[] args) throws FileNotFoundException {
 

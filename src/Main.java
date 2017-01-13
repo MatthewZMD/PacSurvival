@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -18,6 +19,8 @@ public class Main {
 
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.05;
+
+    public static ArrayList<Organism> organisms = null;
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -37,6 +40,12 @@ public class Main {
         walLines = new int[window.getWidth()][3];
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
+
+        Thread checkDeath = new Thread(new CheckDeath());
+        checkDeath.start();
+        Thread checkCollision = new Thread(new CheckCollision());
+        checkCollision.start();
+
         while(run){
             for(int x = 0;x<window.getWidth();x++){
                 //calculate ray position and direction

@@ -5,14 +5,13 @@
 
 abstract public class Creature extends Organism{
 
-	private double dirX, dirY, health=0;
+	private double dirX, dirY;
 	private boolean alive = true;
 	
-	public Creature(double x, double y, double dirX, double dirY, double health){
+	public Creature(double x, double y, double dirX, double dirY){
 		super(x, y);
 		setDirX(dirX);
 	    setDirY(dirY);
-	    updateHealth(health);
 	}
 	
 	public double getDirX() {
@@ -31,22 +30,5 @@ abstract public class Creature extends Organism{
         this.dirY = dirY;
     }
 
-	/**
-	* updateHealth
-	* get class variable health
-	* @param newHealth
-	*/
-	public void updateHealth(double newHealth){
-		this.health+=newHealth;
-	}
-	
-	/**
-	* getHealth
-	* get class variable health
-	* @return  int health class variable
-	*/
-	public double getHealth(){
-		return this.health;
-	}
 	
 }

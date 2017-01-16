@@ -6,11 +6,12 @@
 public class Walker extends Creature{
 	
 	//Declare Variables
-	private int gender;
+	private int gender,health;
 	
 	Walker(double x, double y, double dirX, double dirY, double health, int gender) {
-		super(x, y, dirX, dirY, health);
+		super(x, y, dirX, dirY);
 		setGender(gender);
+		updateHealth(health);
 	}
 	
 	public void setGender(int gender) {
@@ -38,6 +39,24 @@ public class Walker extends Creature{
 		
 		int gender = (int) (Math.random()*2+1);
 		new Walker(x, y, -1, 0, 3, gender);
+	}
+
+	/**
+	 * updateHealth
+	 * get class variable health
+	 * @param newHealth
+	 */
+	public void updateHealth(double newHealth){
+		this.health+=newHealth;
+	}
+
+	/**
+	 * getHealth
+	 * get class variable health
+	 * @return  int health class variable
+	 */
+	public double getHealth(){
+		return this.health;
 	}
 	
 }

@@ -18,7 +18,9 @@ public class Main {
     public static Player player = new Player("MT",64,138,-1,0,3);
 
     //the 2d raycaster version of camera plane
-    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.05;
+    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.1;
+
+    public static double remainTime = 60 * 5;
 
     public static ArrayList<Organism> organisms = new ArrayList<>();
     //Matthew did this
@@ -141,6 +143,8 @@ public class Main {
 
             }
             window.repaint();
+            System.out.println(elapsedSeconds());
+            run = remainTime!=0; //End in 5 minutes
         }
     }
 
@@ -169,9 +173,10 @@ public class Main {
 
     public static double elapsedSeconds(){
         long currentTime = System.nanoTime();
-        return (currentTime - startTime) /1000000000.0;
+        double elapsed = (currentTime - startTime) /1000000000.0;
+        double round = Math.round(elapsed * 10);
+        return round/10;
     }
-
 
     public static class World extends JPanel {
         public void paintComponent(Graphics g) {
@@ -186,6 +191,7 @@ public class Main {
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
             }
+            g.drawString();
         }
     }
 

@@ -17,8 +17,8 @@ public class Player extends Creature{
 	* @param x, y, String name
 	* @return void
 	*/
-	Player(String name,double x, double y, double dirX, double dirY,int health){
-		super(x, y, dirX, dirY, health);
+	Player(String name,double x, double y, double dirX, double dirY){
+		super(x, y, dirX, dirY);
 		setName(name);
 		this.score = 0;
 	}

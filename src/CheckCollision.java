@@ -9,7 +9,7 @@ public class CheckCollision implements Runnable{
 
 				if(MainGame.player.getX() == o.getX() && MainGame.player.getY() == o.getY()){
 					if(o instanceof Walker){
-						if(MainGame.player.getPlantBuff()>0){
+						if(MainGame.plantRemainTime>0){
 							System.out.println("You attacked the Walker at "+o.getX()+","+o.getY()+"!");
 							((Walker) o).updateHealth(-1);
 						}else{
@@ -17,6 +17,8 @@ public class CheckCollision implements Runnable{
 						}
 					}else if(o instanceof Plant){
 						MainGame.remainTime+=60;
+                        MainGame.plantRemainTime+=20;
+                        MainGame.map[(int) o.getX()][(int) o.getY()] = MainGame.map[(int) o.getX()][(int) o.getY()]==4 ? 2:0;
                         MainGame.organisms.remove(i);
 					}
 				}

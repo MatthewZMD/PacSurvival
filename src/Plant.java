@@ -1,6 +1,6 @@
 /* [Plant.java]
  * A Small program for Plant settings and information
- * @author Jim
+ * @author Matthew
  */
 
 public class Plant extends Organism{
@@ -13,6 +13,7 @@ public class Plant extends Organism{
 	*/
 	Plant(int x, int y){
 		super(x, y);
+		MainGame.map[(int) x][(int) y] = MainGame.map[(int) x][(int) y]==2 ? 4:3;
 	}
 	
 }

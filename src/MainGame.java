@@ -18,9 +18,9 @@ public class MainGame {
     public static Player player = new Player("MT",64,138,-1,0);
 
     //the 2d raycaster version of camera plane
-    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.1;
+    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.15,rotSpeed = 0.05;
 
-    public static double remainTime = 60 * 5;
+    public static double remainTime = 60 * 5 , plantRemainTime = 0;
 
     public static ArrayList<Organism> organisms = new ArrayList<>();
     //Matthew did this
@@ -141,15 +141,29 @@ public class MainGame {
             window.repaint();
 
             if(deltaSecond(oldTime)==0.5){
-                remainTime-=deltaSecond(oldTime);
+                remainTime-=0.5;
+                if(plantRemainTime>0){
+                    plantRemainTime-=0.5;
+                }
                 oldTime = System.nanoTime();
             }
-
-//            System.out.println(deltaSecond(oldTime));
-//            System.out.println(remainTime);
             run = remainTime>0; //End when remain time <= 0
         }
         Screens.endGameScreen();
+    }
+
+    public static void spawn(int walkerNum,int plantNum){
+        int x,y;
+        for(int w = 0;w<walkerNum;w++){
+            do {
+                x = (int) (Math.random() * (map[0].length + 1));
+                y = (int) (Math.random() * (map.length + 1));
+            }while(map[x][y]==1);
+
+        }
+        for(int p = 0;p<plantNum;p++){
+
+        }
     }
 
     public static void readMap() throws FileNotFoundException {

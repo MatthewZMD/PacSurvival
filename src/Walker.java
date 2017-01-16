@@ -1,6 +1,6 @@
 /* [Walker.java]
  * A Small program for antagonist settings and information
- * @author Jim
+ * @author Matthew
  */
 
 public class Walker extends Creature{
@@ -12,6 +12,7 @@ public class Walker extends Creature{
 		super(x, y, dirX, dirY);
 		setGender(gender);
 		updateHealth(health);
+		MainGame.map[(int) x][(int) y] = MainGame.map[(int) x][(int) y]==3 ? 4:2;
 	}
 	
 	public void setGender(int gender) {

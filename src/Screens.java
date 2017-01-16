@@ -57,7 +57,7 @@ public class Screens{
 		startButton.setFont(new Font("Courier", Font.CENTER_BASELINE, 25));
 		startButton.addActionListener(new startListener());
 		startButton.setBackground(Color.yellow);
-		JLabel filler = new JLabel("      ");
+		JLabel filler = new JLabel("                        ");
 		filler.setFont(new Font(("Courier"), Font.BOLD, 80));
 		JPanel startButtonPanel = new JPanel(new FlowLayout());
 		startButtonPanel.add(filler);

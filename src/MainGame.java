@@ -32,7 +32,7 @@ public class MainGame {
 
         boolean run = true;
 
-        window.setSize(1280,    900);
+        window.setSize(1280,900);
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +51,7 @@ public class MainGame {
         Thread checkCollision = new Thread(new CheckCollision());
         checkCollision.start();
 
-        double oldTime = System.nanoTime();
+        long oldTime = System.nanoTime();
 
         while(run){
             for(int x = 0;x<window.getWidth();x++){
@@ -140,12 +140,16 @@ public class MainGame {
             }
             window.repaint();
 
-            remainTime-=deltaSecond(oldTime);
+            if(deltaSecond(oldTime)==0.5){
+                remainTime-=deltaSecond(oldTime);
+                oldTime = System.nanoTime();
+            }
 
-            System.out.println(remainTime);
+//            System.out.println(deltaSecond(oldTime));
+//            System.out.println(remainTime);
             run = remainTime>0; //End when remain time <= 0
-            Screens.endGameScreen();
         }
+        Screens.endGameScreen();
     }
 
     public static void readMap() throws FileNotFoundException {
@@ -171,7 +175,7 @@ public class MainGame {
         }
     }
 
-    public static double deltaSecond(double oldTime){
+    public static double deltaSecond(long oldTime){
         long currentTime = System.nanoTime();
         double elapsed = (currentTime - oldTime) /1000000000.0;
         double round = Math.round(elapsed * 10);
@@ -191,7 +195,9 @@ public class MainGame {
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
             }
-//            g.drawString();
+            g.setColor(Color.RED);
+            g.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+            g.drawString("Remaining Time: "+(int)remainTime+"s",0,30);
         }
     }
 

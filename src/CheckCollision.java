@@ -6,6 +6,7 @@ public class CheckCollision implements Runnable{
 			for(int i = 0; i < MainGame.organisms.size(); i++){
 				System.out.println("Checking Collision");
 				Organism o = MainGame.organisms.get(i);
+
 				if(MainGame.player.getX() == o.getX() && MainGame.player.getY() == o.getY()){
 					if(o instanceof Walker){
 						if(MainGame.player.getPlantBuff()>0){

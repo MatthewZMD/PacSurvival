@@ -32,7 +32,8 @@ public class Leaderboard {
 			//read player information into array
 			while(playerInfo != null){
 				String[] info = playerInfo.split(",");
-				players.add(new Player(info[0],0,0,0,0,10));
+				players.add(new Player(info[0],0,0,0,0));
+				//String name,double x, double y, double dirX, double dirY
 				players.get(i).setScore(Integer.parseInt(info[1]));
 				i++;
 				try{
@@ -47,7 +48,7 @@ public class Leaderboard {
 			fileReader.close();
 			
 			//Add the new player at the end of arraylist
-			players.add(new Player(name,0,0,0,0,10));
+			players.add(new Player(name,0,0,0,0));
 			players.get(i).setScore(score);
 			
 			//Reprint the list storage file with one new player in the arraylist

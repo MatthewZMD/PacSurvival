@@ -12,11 +12,10 @@ public class CheckCollision implements Runnable{
 							System.out.println("You attacked the Walker at "+o.getX()+","+o.getY()+"!");
 							((Walker) o).updateHealth(-1);
 						}else{
-							Main.player.updateHealth(-1);
+							Main.remainTime-=30;
 						}
 					}else if(o instanceof Plant){
-						Main.player.updateHealth(0.5);
-						Main.player.addPlantBuff(30);
+						Main.remainTime+=60;
 						Main.organisms.remove(i);
 					}
 				}

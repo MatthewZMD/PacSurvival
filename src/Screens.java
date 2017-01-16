@@ -138,7 +138,7 @@ public class Screens implements Runnable{
 		playerName = name.getText();
 		//Temporarily open a new game window, run the game.
 		window.setVisible(false);
-		new Main();
+		new MainGame();
 		
 	}
 	
@@ -230,7 +230,7 @@ public class Screens implements Runnable{
 	
 	/**
 	 * gameListener
-	 * switches the JFrame to game frame in Main.java
+	 * switches the JFrame to game frame in MainGame.java
 	 */
 	class gameListener implements ActionListener { 
 		public void actionPerformed(ActionEvent event) {

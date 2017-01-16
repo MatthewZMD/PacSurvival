@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class MainGame {
     public static int[][] map;
     public static int[][]walLines;
 
@@ -25,8 +25,6 @@ public class Main {
     public static ArrayList<Organism> organisms = new ArrayList<>();
     //Matthew did this
     //Jim did this
-
-    public static long startTime;
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -53,9 +51,7 @@ public class Main {
         Thread checkCollision = new Thread(new CheckCollision());
         checkCollision.start();
 
-        if(run){
-            startTime = System.nanoTime();
-        }
+        double oldTime = System.nanoTime();
 
         while(run){
             for(int x = 0;x<window.getWidth();x++){
@@ -143,8 +139,11 @@ public class Main {
 
             }
             window.repaint();
-            System.out.println(elapsedSeconds());
-            run = remainTime!=0; //End in 5 minutes
+
+            remainTime-=deltaSecond(oldTime);
+
+            System.out.println(remainTime);
+            run = remainTime>0; //End when remain time <= 0
         }
     }
 
@@ -171,9 +170,9 @@ public class Main {
         }
     }
 
-    public static double elapsedSeconds(){
+    public static double deltaSecond(double oldTime){
         long currentTime = System.nanoTime();
-        double elapsed = (currentTime - startTime) /1000000000.0;
+        double elapsed = (currentTime - oldTime) /1000000000.0;
         double round = Math.round(elapsed * 10);
         return round/10;
     }

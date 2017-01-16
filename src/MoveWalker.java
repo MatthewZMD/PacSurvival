@@ -1,6 +1,10 @@
 
 public class MoveWalker implements Runnable{
 
+	MoveWalker(){
+		new Walker();
+	}
+
 	public void run() {
 
 		for(int i = 0; i < Main.organisms.size(); i++) {

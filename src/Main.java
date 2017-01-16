@@ -145,6 +145,7 @@ public class Main {
             window.repaint();
             System.out.println(elapsedSeconds());
             run = remainTime!=0; //End in 5 minutes
+            Screens.endGameScreen();
         }
     }
 

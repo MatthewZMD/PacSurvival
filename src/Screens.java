@@ -43,8 +43,6 @@ public class Screens implements Runnable{
 	
 	/**begin()
 	 * This method  is for the main intro screen
-	 * @param void
-	 * @return void
 	 **/
 	public void begin(){
 		
@@ -102,8 +100,6 @@ public class Screens implements Runnable{
 	
 	/**setup()
 	 * This method  is for the player information setup screen
-	 * @param void
-	 * @return void
 	 **/
 	public void setup(){
 		
@@ -135,54 +131,52 @@ public class Screens implements Runnable{
 	
 	/**gameScreen()
 	 * This method  is for constructing the game playing screen
-	 * @param void
-	 * @return void
 	 **/
 	public void gameScreen(){
 		
 		//Get the name of the player
 		playerName = name.getText();
-		
-		
-		//Reset the frame work
-		window.remove(contentPane);
-		contentPane = new JPanel(new BorderLayout());
-		
-		//Create items
-		ImageIcon image = new ImageIcon("backGround.jpg");
-		JLabel label = new JLabel("", image, JLabel.CENTER);
-		JButton endButton = new JButton("End this");
-		endButton.addActionListener(new endListener());
-		
-		//Add items to JPanel
-		contentPane.add(label, BorderLayout.CENTER);
-		contentPane.add(endButton, BorderLayout.SOUTH);
-		
-		//Final settings 
-		window.setSize(600, 600);
-		window.setContentPane(contentPane);
-		window.getContentPane().setBackground(Color.black);
-	    window.setVisible(true);
+		//Temporarily open a new game window, run the game.
+		window.setVisible(false);
+		new Main();
 		
 	}
 	
 	/**editGameScreen()
 	 * This method  is for reconstructing the game playing screen after the user lost
-	 * @param void
-	 * @return void
 	 **/
-	public void editGameScreen(){
-		
-		//contentPane.remove(timerLabel);
-		//contentPane.add(comp, constraints);
-		
+	public void endGameScreen(){
+
+		//Reset the frame work
+		window.remove(contentPane);
+		contentPane = new JPanel(new BorderLayout());
+
+		//Create items
+		ImageIcon image = new ImageIcon("backGround.jpg");
+		JLabel label = new JLabel("", image, JLabel.CENTER);
+		JButton endButton = new JButton("Check your Score");
+		endButton.addActionListener(new endListener());
+
+		//Add items to JPanel
+
+		JPanel endGamePanel = new JPanel(new GridLayout(1, 4));
+		endGamePanel.add(new JLabel("Game Over"));
+		endGamePanel.add(new JLabel("Player has killed this many walkers"));
+		endGamePanel.add(new JLabel("Player has survived for this amount of time."));
+
+		contentPane.add(endGamePanel, BorderLayout.CENTER);
+		contentPane.add(endButton, BorderLayout.SOUTH);
+
+		//Final settings
+		window.setSize(600, 600);
+		window.setContentPane(contentPane);
+		window.getContentPane().setBackground(Color.cyan);
 		window.setVisible(true);
+
 	}
 	
 	/**endScreen()
-	 * This method  is for displaying leaderboard + player score. 
-	 * @param void
-	 * @return void
+	 * This method  is for displaying leaderboard + player score.
 	 **/
 	public void endScreen(){
 		
@@ -236,7 +230,7 @@ public class Screens implements Runnable{
 	
 	/**
 	 * gameListener
-	 * remakes the JFrame
+	 * switches the JFrame to game frame in Main.java
 	 */
 	class gameListener implements ActionListener { 
 		public void actionPerformed(ActionEvent event) {
@@ -245,15 +239,26 @@ public class Screens implements Runnable{
 	}
 	
 	/**
+	 * endGameListener
+	 * remakes the JFrame
+
+	class endGameListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			endGameScreen();
+		}
+	}
+	 */
+
+	/**
 	 * endListener
 	 * remakes the JFrame
 	 */
-	class endListener implements ActionListener { 
+	class endListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			endScreen();
-	    } 
+		}
 	}
-	
+
 	/**
 	 * returnListener
 	 * remakes the JFrame
@@ -269,7 +274,6 @@ public class Screens implements Runnable{
 	/**
 	 * setUIFont
 	 * set the font for java swing
-	 * @param javax.swing.plaf.FontUIResource f
 	 */
 	public static void setUIFont (javax.swing.plaf.FontUIResource f){
 	    Enumeration<Object> keys = UIManager.getDefaults().keys();

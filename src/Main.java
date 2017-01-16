@@ -15,7 +15,7 @@ public class Main {
     public static World world = new World();
 
     //Create player object
-    public static Player player = new Player("MT",64,138,-1,0,3);
+    public static Player player = new Player("MT",64,138,-1,0);
 
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.2,rotSpeed = 0.1;
@@ -191,7 +191,7 @@ public class Main {
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
             }
-            g.drawString();
+//            g.drawString();
         }
     }
 

@@ -144,6 +144,7 @@ public class MainGame {
 
             System.out.println(remainTime);
             run = remainTime>0; //End when remain time <= 0
+            Screens.endGameScreen();
         }
     }
 

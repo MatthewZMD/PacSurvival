@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-public class Screens implements Runnable{
+public class Screens{
 
 	//Declare Variables
 	private static JButton startButton;
@@ -44,7 +44,7 @@ public class Screens implements Runnable{
 	/**begin()
 	 * This method  is for the main intro screen
 	 **/
-	public void begin(){
+	public static void begin(){
 		
 		//Set Default Font
 		setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,15));
@@ -101,7 +101,7 @@ public class Screens implements Runnable{
 	/**setup()
 	 * This method  is for the player information setup screen
 	 **/
-	public void setup(){
+	public static void setup(){
 		
 		//Set up the frame work
 		window.remove(contentPane);
@@ -132,7 +132,7 @@ public class Screens implements Runnable{
 	/**gameScreen()
 	 * This method  is for constructing the game playing screen
 	 **/
-	public void gameScreen(){
+	public static void gameScreen(){
 		
 		//Get the name of the player
 		playerName = name.getText();
@@ -145,7 +145,7 @@ public class Screens implements Runnable{
 	/**editGameScreen()
 	 * This method  is for reconstructing the game playing screen after the user lost
 	 **/
-	public void endGameScreen(){
+	public static void endGameScreen(){
 
 		//Reset the frame work
 		window.remove(contentPane);
@@ -178,7 +178,7 @@ public class Screens implements Runnable{
 	/**endScreen()
 	 * This method  is for displaying leaderboard + player score.
 	 **/
-	public void endScreen(){
+	public static void endScreen(){
 		
 		//Set up the frame work
 		window.remove(contentPane);
@@ -222,7 +222,7 @@ public class Screens implements Runnable{
 	 * startListener
 	 * remakes the JFrame
 	 */
-	class startListener implements ActionListener { 
+	static class startListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			setup();
 	    }	
@@ -232,7 +232,7 @@ public class Screens implements Runnable{
 	 * gameListener
 	 * switches the JFrame to game frame in MainGame.java
 	 */
-	class gameListener implements ActionListener { 
+	static class gameListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			gameScreen();
 	    } 
@@ -253,7 +253,7 @@ public class Screens implements Runnable{
 	 * endListener
 	 * remakes the JFrame
 	 */
-	class endListener implements ActionListener {
+	static class endListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			endScreen();
 		}
@@ -263,7 +263,7 @@ public class Screens implements Runnable{
 	 * returnListener
 	 * remakes the JFrame
 	 */
-	class returnListener implements ActionListener { 
+	static class returnListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			begin();
 	    } 
@@ -283,11 +283,5 @@ public class Screens implements Runnable{
 	      if (value != null && value instanceof javax.swing.plaf.FontUIResource)
 	        UIManager.put (key, f);
 	      }
-	    } 
-	
-	
-
-	public void run() {
-		System.out.println("Running at the same time.");
-	}
+	    }
 }

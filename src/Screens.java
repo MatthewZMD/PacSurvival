@@ -12,6 +12,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -132,13 +133,13 @@ public class Screens{
 	/**gameScreen()
 	 * This method  is for constructing the game playing screen
 	 **/
-	public static void gameScreen(){
+	public static void gameScreen() throws FileNotFoundException {
 		
 		//Get the name of the player
 		playerName = name.getText();
 		//Temporarily open a new game window, run the game.
 		window.setVisible(false);
-		new MainGame();
+		new MainGame().main(null );
 		
 	}
 	
@@ -234,8 +235,12 @@ public class Screens{
 	 */
 	static class gameListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			gameScreen();
-	    } 
+			try {
+				gameScreen();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**

@@ -149,7 +149,6 @@ public class MainGame {
                 walLines[x][1] = drawEnd;
                 walLines[x][2] = map[mapX][mapY];
                 walLines[x][3] = side;
-
             }
             window.repaint();
 

@@ -7,12 +7,14 @@ public class Walker extends Creature{
 	
 	//Declare Variables
 	private int gender,health;
+	private long countTime;
 	
 	Walker(double x, double y, double dirX, double dirY, double health, int gender) {
 		super(x, y, dirX, dirY);
 		setGender(gender);
 		updateHealth(health);
-		MainGame.map[(int) x][(int) y] = MainGame.map[(int) x][(int) y]==3 ? 4:2;
+		MainGame.map[(int) y][(int) x] = MainGame.map[(int) y][(int) x]==3 ? 4:2;
+		setCountTime(System.nanoTime());
 	}
 	
 	public void setGender(int gender) {
@@ -23,32 +25,13 @@ public class Walker extends Creature{
 		return this.gender;
 	}
 
-	public boolean compareCoordinates(Walker one, Walker two){
-		if(one.getGender() == two.getGender() && one.getX() == two.getX() && two.getY() == one.getY()){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	public void makeBabies(){
-		int x,y;
-		do{
-			x = (int) (Math.random()*MainGame.map[0].length);
-			y = (int) (Math.random()*MainGame.map.length);
-		}while(MainGame.map[x][y]!=0);
-		
-		int gender = (int) (Math.random()*2+1);
-		new Walker(x, y, -1, 0, 3, gender);
-	}
-
 	/**
 	 * updateHealth
 	 * get class variable health
-	 * @param newHealth
+	 * @param addHealth
 	 */
-	public void updateHealth(double newHealth){
-		this.health+=newHealth;
+	public void updateHealth(double addHealth){
+		this.health+=addHealth;
 	}
 
 	/**
@@ -59,5 +42,12 @@ public class Walker extends Creature{
 	public double getHealth(){
 		return this.health;
 	}
-	
+
+	public long getCountTime() {
+		return countTime;
+	}
+
+	public void setCountTime(long countTime) {
+		this.countTime = countTime;
+	}
 }

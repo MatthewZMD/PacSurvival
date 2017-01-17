@@ -1,12 +1,11 @@
 /* [Creature.java]
  * A Small program for creature settings and information
- * @author Jim
+ * @author Matthew
  */
 
 abstract public class Creature extends Organism{
 
 	private double dirX, dirY;
-	private boolean alive = true;
 	
 	public Creature(double x, double y, double dirX, double dirY){
 		super(x, y);

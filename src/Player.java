@@ -1,6 +1,6 @@
 /* [Player.java]
  * A Small program for protagonist settings and information
- * @author Jim
+ * @author Matthew
  */
 
 public class Player extends Creature{
@@ -8,9 +8,7 @@ public class Player extends Creature{
 	//Declare Variables
 	private int score;
 	private String name;
-	
-	private int plantBuff = 0;
-	
+
 	/**
 	* default constructor
 	* sets the variables of protagonist
@@ -39,15 +37,4 @@ public class Player extends Creature{
 		return this.name;
 	}
 
-	public int getPlantBuff() {
-		return plantBuff;
-	}
-
-	/**
-	 * 
-	 * @param newBuff - plantbuff in seconds
-	 */
-	public void addPlantBuff(int newBuff) {
-		this.plantBuff+=newBuff;
-	}
 }

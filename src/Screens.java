@@ -31,8 +31,8 @@ public class Screens{
 	private static JPanel contentPane;
 	private static JFrame menuFrame;
 	private static String playerName;
-	private static JTextField name; 
-	
+	private static JTextField name;
+
 	//Below starts the methods (screens)
 	//Main method
 	public static void main(String[] args){

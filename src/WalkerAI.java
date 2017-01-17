@@ -9,21 +9,21 @@ public class WalkerAI implements Runnable{
 					int walkerX = (int) MainGame.organisms.get(i).getX();
 					int walkerY = (int) MainGame.organisms.get(i).getY();
 					MainGame.map[walkerY][walkerX] = MainGame.map[walkerY][walkerX] == 2 ? 0:3;
-					if (randomNum == 1){
+					if (randomNum == 1&&walkerY+1<MainGame.map.length){
 						if(MainGame.map[walkerY + 1][walkerX] == 2){
 							//breed
 						}else if(MainGame.map[walkerY + 1][walkerX] != 1) {
 							MainGame.organisms.get(i).setY(walkerY + 1);
 						}
-					}else if (randomNum == 2) {
+					}else if (randomNum == 2&&walkerY-1>=0) {
 						if (MainGame.map[walkerY - 1][walkerX] != 1) {
 							MainGame.organisms.get(i).setY(walkerY - 1);
 						}
-					}else if (randomNum == 3) {
+					}else if (randomNum == 3&& walkerX+1 < MainGame.map[0].length) {
 						if (MainGame.map[walkerY][walkerX + 1] != 1) {
 							MainGame.organisms.get(i).setX(walkerX + 1);
 						}
-					} else {
+					} else if (randomNum==4 && walkerX-1>=0){
 						if (MainGame.map[walkerY][walkerX - 1] != 1) {
 							MainGame.organisms.get(i).setX(walkerX - 1);
 						}

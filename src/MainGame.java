@@ -53,9 +53,6 @@ public class MainGame {
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
 
-//        organisms.add(new Walker(0,0,0,0,3,1));
-//        System.out.println("Size: "+ organisms.size());
-
         Thread checkDeath = new Thread(new CheckDeath());
         checkDeath.start();
         Thread checkCollision = new Thread(new CheckCollision());
@@ -65,7 +62,7 @@ public class MainGame {
 
         long oldTime = System.nanoTime();
 
-//        organisms.add(new Walker(138,61,0,0,30,1));
+        organisms.add(new Walker(138,61,0,0,30,1));
         organisms.add(new Plant(138,62,30));
 
         while(run){
@@ -164,7 +161,7 @@ public class MainGame {
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
-//                    spawn(20,20);
+                    spawn(20,20);
                     spawnTime = 60;
                 }
                 oldTime = System.nanoTime();
@@ -241,7 +238,7 @@ public class MainGame {
                 g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 if(walLines[x][2]==2){
                     //Walker
-                    g.setColor(Color.RED);
+                    g.setColor(Color.BLUE);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }else if(walLines[x][2]==3){
                     //Plant
@@ -256,8 +253,8 @@ public class MainGame {
             }
             g.setColor(Color.RED);
             g.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-            g.drawString("Life Remain Time: "+(int)remainTime+"s",0,30);
-            g.drawString("Plant Buff Remain Time: "+(int)plantRemainTime+"s",0,60);
+            g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
+            g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
         }
     }
 
@@ -313,7 +310,6 @@ public class MainGame {
         public void keyReleased(KeyEvent e) {
 //            System.out.println(false);
         }
-
 
     }
 

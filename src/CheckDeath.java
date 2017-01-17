@@ -16,12 +16,6 @@ public class CheckDeath implements Runnable{
 					}
 				}
 			}
-			try{
-				//Thread.sleep(10);
-				Thread.yield();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	

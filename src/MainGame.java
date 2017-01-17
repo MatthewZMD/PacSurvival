@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 public class MainGame {
@@ -43,7 +46,7 @@ public class MainGame {
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
+        window.setResizable(true);
         window.setVisible(true);
 
         walLines = new int[window.getWidth()][4];
@@ -150,6 +153,7 @@ public class MainGame {
                 walLines[x][2] = map[mapX][mapY];
                 walLines[x][3] = side;
             }
+            world.repaint();
             window.repaint();
 
             if(deltaSecond(oldTime)==0.5){
@@ -263,6 +267,7 @@ public class MainGame {
         @Override
         public void keyPressed(KeyEvent e) {
             //Get the key pressed
+            System.out.println(true);
             int key = e.getKeyCode();
             if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_D){
                 //both camera direction and camera plane are rotated

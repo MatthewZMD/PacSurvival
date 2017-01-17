@@ -29,18 +29,18 @@ public class Screens{
 	//Declare Variables
 	private static JButton startButton;
 	private static JPanel contentPane;
-	private static JFrame window;
+	private static JFrame menuFrame;
 	private static String playerName;
 	private static JTextField name; 
 	
 	//Below starts the methods (screens)
 	//Main method
 	public static void main(String[] args){
-		window = new JFrame("Survival");
+		menuFrame = new JFrame("Survival");
 		new Screens().begin();
 	}
 	
-	/***************PART A: Methods of different window screens *********/
+	/***************PART A: Methods of different menuFrame screens *********/
 	
 	/**begin()
 	 * This method  is for the main intro screen
@@ -90,12 +90,12 @@ public class Screens{
 		
 		//Final settings 
 		ImageIcon icon = new ImageIcon("gameIcon.png");
-		window.setIconImage(icon.getImage());
-		window.setSize(600,600);
-		window.setContentPane(contentPane);
-		window.getContentPane().setBackground(Color.cyan);
-	    window.setVisible(true);
-	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		menuFrame.setIconImage(icon.getImage());
+		menuFrame.setSize(600,600);
+		menuFrame.setContentPane(contentPane);
+		menuFrame.getContentPane().setBackground(Color.cyan);
+	    menuFrame.setVisible(true);
+	    menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
 	}
 	
@@ -105,7 +105,7 @@ public class Screens{
 	public static void setup(){
 		
 		//Set up the frame work
-		window.remove(contentPane);
+		menuFrame.remove(contentPane);
 		contentPane = new JPanel();
 		contentPane = new JPanel(new GridLayout(3, 1));
 		
@@ -124,10 +124,10 @@ public class Screens{
 		contentPane.add(startButton);
 		
 		//Final settings 
-		window.setContentPane(contentPane);
-		window.setSize(300,200);
-		window.getContentPane().setBackground(Color.cyan);
-		window.setVisible(true);
+		menuFrame.setContentPane(contentPane);
+		menuFrame.setSize(300,200);
+		menuFrame.getContentPane().setBackground(Color.cyan);
+		menuFrame.setVisible(true);
 	}
 	
 	/**gameScreen()
@@ -137,8 +137,8 @@ public class Screens{
 		
 		//Get the name of the player
 		playerName = name.getText();
-		//Temporarily open a new game window, run the game.
-		window.setVisible(false);
+		//Temporarily open a new game menuFrame, run the game.
+		menuFrame.setVisible(false);
 		new MainGame().main(null );
 		
 	}
@@ -149,7 +149,7 @@ public class Screens{
 	public static void endGameScreen(){
 
 		//Reset the frame work
-		window.remove(contentPane);
+		menuFrame.remove(contentPane);
 		contentPane = new JPanel(new BorderLayout());
 
 		//Create items
@@ -169,10 +169,10 @@ public class Screens{
 		contentPane.add(endButton, BorderLayout.SOUTH);
 
 		//Final settings
-		window.setSize(600, 600);
-		window.setContentPane(contentPane);
-		window.getContentPane().setBackground(Color.cyan);
-		window.setVisible(true);
+		menuFrame.setSize(600, 600);
+		menuFrame.setContentPane(contentPane);
+		menuFrame.getContentPane().setBackground(Color.cyan);
+		menuFrame.setVisible(true);
 
 	}
 	
@@ -182,7 +182,7 @@ public class Screens{
 	public static void endScreen(){
 		
 		//Set up the frame work
-		window.remove(contentPane);
+		menuFrame.remove(contentPane);
 		contentPane = new JPanel(new BorderLayout());
 	
 		//Set Default Font
@@ -211,9 +211,9 @@ public class Screens{
 		contentPane.add(new JLabel("    "), BorderLayout.WEST);
 		
 		//Final settings 
-		window.setContentPane(contentPane);
-		window.getContentPane().setBackground(Color.cyan);
-	    window.setVisible(true);
+		menuFrame.setContentPane(contentPane);
+		menuFrame.getContentPane().setBackground(Color.cyan);
+	    menuFrame.setVisible(true);
 		
 	}
 	

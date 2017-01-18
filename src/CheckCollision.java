@@ -8,12 +8,19 @@ public class CheckCollision implements Runnable{
 				Organism o = MainGame.organisms.get(i);
 
 //                try {
-//                    System.out.println(o.getX()+" "+o.getY()+" "+Math.floor(MainGame.player.getY())+" "+Math.floor(MainGame.player.getX())+" "+(MainGame.player.getY() >= o.getX()-0.5)+" "+(MainGame.player.getY() <= o.getX()+0.5)+" "+(MainGame.player.getX() >= o.getY()-0.5)+" "+(MainGame.player.getX() <= o.getY()+0.5));
+//                System.out.println(o.getX()+" "+o.getY()+" "+Math.floor(MainGame.player.getY())+" "+Math.floor(MainGame.player.getX())+" "+(MainGame.player.getY() >= o.getX()-0.5)+" "+(MainGame.player.getY() <= o.getX()+0.5)+" "+(MainGame.player.getX() >= o.getY()-0.5)+" "+(MainGame.player.getX() <= o.getY()+0.5));
+
                 if (o!=null&&Math.floor(MainGame.player.getY()) >= o.getX()-0.5 && Math.floor(MainGame.player.getY()) <= o.getX()+0.5 && Math.floor(MainGame.player.getX()) >= o.getY()-0.5 && Math.floor(MainGame.player.getX()) <= o.getY()+0.5) {
                     if (o instanceof Walker) {
                         if (MainGame.plantRemainTime > 0) {
-                            System.out.println("You attacked the Walker at " + o.getX() + "," + o.getY() + "!");
+                            System.out.print("You attacked the Walker at " + o.getX() + "," + o.getY() + "! ");
                             ((Walker) o).updateHealth(-100);
+                            System.out.println("Walker remaining health: "+((Walker) o).getHealth());
+                            if(((Walker) o).getHealth()<=0){
+                                MainGame.map[(int) o.getY()][(int) o.getX()] = MainGame.map[(int) o.getY()][(int) o.getX()] == 2 ? 0:3;
+                                MainGame.organisms.remove(i);
+                                System.out.println("Walker died");
+                            }
                         } else {
                             System.out.println("You collided with a Walker at " + o.getX() + "," + o.getY());
                             MainGame.remainTime -= 30;

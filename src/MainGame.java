@@ -276,7 +276,6 @@ public class MainGame {
             updateMovement();
             window.repaint();
 
-
             if(start&&oldTime==0){
                 startTime = System.nanoTime();
                 oldTime = System.nanoTime();
@@ -288,9 +287,11 @@ public class MainGame {
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
+                    int walkerNum = (int) Math.round(4000/(deltaSecond(startTime)+50));
+                    int plantNum = (int) Math.round(10000/(deltaSecond(startTime)+100));
 //                    System.out.println(deltaSecond(startTime));
-                    spawn((int) Math.round(5000/(deltaSecond(startTime)+100)),(int) Math.round(5000/(deltaSecond(startTime)+50)));
-                    System.out.println("Spawned "+(int) Math.round(5000/(deltaSecond(startTime)+100))+" Walkers and "+(int) Math.round(5000/(deltaSecond(startTime)+50))+" plants.");
+                    spawn(walkerNum,plantNum);
+                    System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
                     spawnTime = 60;
                 }
                 oldTime = System.nanoTime();

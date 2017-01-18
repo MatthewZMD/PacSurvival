@@ -89,6 +89,7 @@ public class MainGame {
         ImageIcon icon = new ImageIcon("gameIcon.png");
         menuFrame.setIconImage(icon.getImage());
         menuFrame.setSize(600,600);
+        menuFrame.setVisible(true);
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
         //menuFrame.setVisible(true);
@@ -120,7 +121,6 @@ public class MainGame {
         menuFrame2.setIconImage(icon.getImage());
         menuFrame2.setContentPane(contentPane2);
         menuFrame2.getContentPane().setBackground(Color.cyan);
-        menuFrame2.setVisible(true);
         menuFrame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         window.setSize(1280,900);

@@ -16,7 +16,6 @@ public class MainGame {
 
     public static JFrame window = new JFrame("Survival");
     public static World world = new World();
-    public static JFrame menuFrame2, menuFrame3;
 
     //Create player object
     public static Player player = new Player("MT",64,138,-1,0);
@@ -33,7 +32,7 @@ public class MainGame {
     //Declare Variables
     public static JButton startButton;
     public static JPanel contentPane;
-    public static JFrame menuFrame;
+    public static JFrame menuFrame, menuFrame2, menuFrame3;
     public static String playerName;
     public static JTextField name;
 
@@ -100,18 +99,26 @@ public class MainGame {
         menuFrame2 = new JFrame("Survival");
 
         //Set up the frame work
-        JPanel contentPane2 = new JPanel(new GridLayout(3, 1));
+        JPanel contentPane2 = new JPanel(new GridLayout(7, 1));
 
         //Create items
         JButton startButton2 = new JButton("BEGIN");
         startButton2.setBackground(Color.CYAN);
         startButton2.setFont(new Font("Courier", Font.CENTER_BASELINE, 16));
         startButton2.addActionListener(new gameListener());
+        JLabel instruction1 = new JLabel("Objective: find an exit in limited time.");
+        JLabel instruction2 = new JLabel("Yellow: plant +30s of lifespan");
+        JLabel instruction3 = new JLabel("Blue: walker -60s of lifespan");
+        JLabel instruction4 = new JLabel("You lose when there is <=0s left.");
         JLabel title2 = new JLabel("Insert your name to begin: ");
         title2.setFont(new Font("Courier", Font.CENTER_BASELINE, 12));
         name = new JTextField(100);
 
         //Add items to JPanel
+        contentPane2.add(instruction1);
+        contentPane2.add(instruction2);
+        contentPane2.add(instruction3);
+        contentPane2.add(instruction4);
         contentPane2.add(title2);
         contentPane2.add(name);
         contentPane2.add(startButton2);
@@ -123,6 +130,8 @@ public class MainGame {
         menuFrame2.getContentPane().setBackground(Color.cyan);
         menuFrame2.setVisible(false);
         menuFrame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        /*************/
 
         window.setSize(1280,900);
         window.getContentPane().add(world);

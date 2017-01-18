@@ -50,7 +50,7 @@ public class MainGame {
         //Set up the frame work
         contentPane = new JPanel(new GridLayout(2,2));
 
-        //Create items
+        //Create item
         startButton = new JButton("Start");
         startButton.setFont(new Font("Courier", Font.CENTER_BASELINE, 25));
         startButton.addActionListener(new startListener());

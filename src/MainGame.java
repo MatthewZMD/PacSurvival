@@ -155,7 +155,7 @@ public class MainGame {
         Thread walkerAI = new Thread(new WalkerAI());
         walkerAI.start();
 
-        long oldTime = 0;
+        long oldTime = 0,startTime = 0;
         boolean alive = true;
 
         //Initial tutorial
@@ -254,6 +254,7 @@ public class MainGame {
 
 
             if(start&&oldTime==0){
+                startTime = System.nanoTime();
                 oldTime = System.nanoTime();
             }else if(start&&deltaSecond(oldTime)==0.5){
                 remainTime-=0.5;

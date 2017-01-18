@@ -136,7 +136,6 @@ public class MainGame {
         window.setVisible(true);
 
         newGame();
-
     }
 
     public static void newGame() throws FileNotFoundException {

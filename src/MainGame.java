@@ -30,25 +30,18 @@ public class MainGame {
     //Jim did this
 
     //Declare Variables
-    private static JButton startButton;
-    private static JPanel contentPane;
-    private static JFrame menuFrame;
-    private static String playerName;
-    private static JTextField name;
+    public static JButton startButton;
+    public static JPanel contentPane;
+    public static JFrame menuFrame;
+    public static String playerName;
+    public static JTextField name;
+
+    public static boolean run = false;
 
     //Below starts the methods (screens)
     //Main method
-    public static void main(String[] args){
+    public static void main(String[] args) throws FileNotFoundException {
         menuFrame = new JFrame("Survival");
-        begin();
-    }
-
-    /***************PART A: Methods of different menuFrame screens *********/
-
-    /**begin()
-     * This method  is for the main intro screen
-     **/
-    public static void begin(){
 
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,15));
@@ -75,10 +68,10 @@ public class MainGame {
         settingButtonPanel.add(new JLabel("Jan. 19th, 2038. 03:14:07"));
         settingButtonPanel.add(new JLabel("You are summoned to the world."));
         settingButtonPanel.add(new JLabel("Walkers are everywhere."));
-        settingButtonPanel.add(new JLabel("Eat the Fruit of Strength"));
-        settingButtonPanel.add(new JLabel("to kill the Walkers."));
         settingButtonPanel.add(new JLabel("Find an exit for us to"));
         settingButtonPanel.add(new JLabel("bring peace to humanity."));
+        settingButtonPanel.add(new JLabel("Eat the Fruit of Strength"));
+        settingButtonPanel.add(new JLabel("and kill the Walkers on your way."));
         settingButtonPanel.add(new JLabel("We've great expectations for you."));
         settingButtonPanel.add(new JLabel("Good luck!"));
         settingButtonPanel.setBackground(Color.yellow);
@@ -100,12 +93,14 @@ public class MainGame {
         menuFrame.setVisible(true);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    }
+        window.setSize(1280,900);
+        window.getContentPane().add(world);
+        window.addKeyListener(new keyListener());
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setVisible(false);
+        run = false;
 
-    /**setup()
-     * This method  is for the player information setup screen
-     **/
-    public static void setup(){
 
         //Set up the frame work
         menuFrame.remove(contentPane);
@@ -117,7 +112,7 @@ public class MainGame {
         startButton.setBackground(Color.CYAN);
         startButton.setFont(new Font("Courier", Font.CENTER_BASELINE, 16));
         startButton.addActionListener(new gameListener());
-        JLabel title = new JLabel("Insert your name to begin: ");
+        title = new JLabel("Insert your name to begin: ");
         title.setFont(new Font("Courier", Font.CENTER_BASELINE, 12));
         name = new JTextField(100);
 
@@ -131,166 +126,17 @@ public class MainGame {
         menuFrame.setSize(300,200);
         menuFrame.getContentPane().setBackground(Color.cyan);
         menuFrame.setVisible(true);
-    }
 
-    /**gameScreen()
-     * This method  is for constructing the game playing screen
-     **/
-    public static void gameScreen() throws FileNotFoundException {
 
         //Get the name of the player
         playerName = name.getText();
         //Temporarily open a new game menuFrame, run the game.
         menuFrame.setVisible(false);
+        run = true;
+        window.setVisible(true);
+
         newGame();
 
-    }
-
-    /**editGameScreen()
-     * This method  is for reconstructing the game playing screen after the user lost
-     **/
-    public static void endGameScreen(){
-
-        //Reset the frame work
-        menuFrame.remove(contentPane);
-        contentPane = new JPanel(new BorderLayout());
-
-        //Create items
-        ImageIcon image = new ImageIcon("backGround.jpg");
-        JLabel label = new JLabel("", image, JLabel.CENTER);
-        JButton endButton = new JButton("Check your Score");
-        endButton.addActionListener(new endListener());
-
-        //Add items to JPanel
-
-        JPanel endGamePanel = new JPanel(new GridLayout(4, 1));
-        endGamePanel.add(new JLabel("Game Over"));
-        endGamePanel.add(new JLabel("Player has killed this many walkers"));
-        endGamePanel.add(new JLabel("Player has survived for this amount of time."));
-
-        contentPane.add(endGamePanel, BorderLayout.CENTER);
-        contentPane.add(endButton, BorderLayout.SOUTH);
-
-        //Final settings
-        menuFrame.setSize(600, 600);
-        menuFrame.setContentPane(contentPane);
-        menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setVisible(true);
-
-    }
-
-    /**endScreen()
-     * This method  is for displaying leaderboard + player score.
-     **/
-    public static void endScreen(){
-
-        //Set up the frame work
-        menuFrame.remove(contentPane);
-        contentPane = new JPanel(new BorderLayout());
-
-        //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,16));
-
-        //Create items
-        Leaderboard test = new Leaderboard(playerName, 5);
-        ArrayList<Player> players = test.sortAndGet();
-        JButton returnButton = new JButton("Return to Start Menu");
-        returnButton.setBackground(Color.cyan);
-        returnButton.addActionListener(new returnListener());
-        JLabel title = new JLabel("You have made a score of "+players.get(players.size()-1).getScore());
-        title.setFont(new Font("Courier", Font.CENTER_BASELINE, 19));
-
-        //Add items to sub jpanel
-        JPanel board = new JPanel(new GridLayout(players.size()+1, 1));
-        board.add(new JLabel("Leaderboard: "));
-        for(int i = 0; i < players.size(); i++){
-            board.add(new JLabel((i+1)+"."+players.get(i).getName()+": "+players.get(i).getScore()));
-        }
-
-        //Add items to JPanel
-        contentPane.add(title, BorderLayout.NORTH);
-        contentPane.add(board, BorderLayout.CENTER);
-        contentPane.add(returnButton, BorderLayout.SOUTH);
-        contentPane.add(new JLabel("    "), BorderLayout.WEST);
-
-        //Final settings
-        menuFrame.setContentPane(contentPane);
-        menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setVisible(true);
-
-    }
-
-    /*******************PART B: ACTION LISTERNERS *************/
-
-    /**
-     * startListener
-     * remakes the JFrame
-     */
-    static class startListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            setup();
-        }
-    }
-
-    /**
-     * gameListener
-     * switches the JFrame to game frame in MainGame.java
-     */
-    static class gameListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            try {
-                gameScreen();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * endGameListener
-     * remakes the JFrame
-
-     class endGameListener implements ActionListener {
-     public void actionPerformed(ActionEvent event) {
-     endGameScreen();
-     }
-     }
-     */
-
-    /**
-     * endListener
-     * remakes the JFrame
-     */
-    static class endListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            endScreen();
-        }
-    }
-
-    /**
-     * returnListener
-     * remakes the JFrame
-     */
-    static class returnListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            begin();
-        }
-    }
-
-
-    /******************PART C: MISCELLALIOUS METHODS**************/
-    /**
-     * setUIFont
-     * set the font for java swing
-     */
-    public static void setUIFont (javax.swing.plaf.FontUIResource f){
-        Enumeration<Object> keys = UIManager.getDefaults().keys();
-        while (keys.hasMoreElements()) {
-            Object key = keys.nextElement();
-            Object value = UIManager.get (key);
-            if (value != null && value instanceof javax.swing.plaf.FontUIResource)
-                UIManager.put (key, f);
-        }
     }
 
     public static void newGame() throws FileNotFoundException {
@@ -303,15 +149,6 @@ public class MainGame {
             }
         }
         System.out.println(count);
-
-        boolean run = true;
-
-        window.setSize(1280,900);
-        window.getContentPane().add(world);
-        window.addKeyListener(new keyListener());
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(true);
-        window.setVisible(true);
 
         walLines = new int[window.getWidth()][4];
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
@@ -524,8 +361,7 @@ public class MainGame {
         }
     }
 
-
-    private static class keyListener implements KeyListener {
+    public static class keyListener implements KeyListener {
         double changeX,changeY;
         int factor = 10;
         @Override
@@ -579,5 +415,140 @@ public class MainGame {
         }
 
     }
+
+    /***************PART A: Methods of different menuFrame screens *********/
+
+    /**editGameScreen()
+     * This method  is for reconstructing the game playing screen after the user lost
+     **/
+    public static void endGameScreen(){
+
+        //Reset the frame work
+        menuFrame.remove(contentPane);
+        contentPane = new JPanel(new BorderLayout());
+
+        //Create items
+        ImageIcon image = new ImageIcon("backGround.jpg");
+        JLabel label = new JLabel("", image, JLabel.CENTER);
+        JButton endButton = new JButton("Check your Score");
+        endButton.addActionListener(new endListener());
+
+        //Add items to JPanel
+
+        JPanel endGamePanel = new JPanel(new GridLayout(4, 1));
+        endGamePanel.add(new JLabel("Game Over"));
+        endGamePanel.add(new JLabel("Player has killed this many walkers"));
+        endGamePanel.add(new JLabel("Player has survived for this amount of time."));
+
+        contentPane.add(endGamePanel, BorderLayout.CENTER);
+        contentPane.add(endButton, BorderLayout.SOUTH);
+
+        //Final settings
+        menuFrame.setSize(600, 600);
+        menuFrame.setContentPane(contentPane);
+        menuFrame.getContentPane().setBackground(Color.cyan);
+        menuFrame.setVisible(true);
+
+    }
+
+    /**endScreen()
+     * This method  is for displaying leaderboard + player score.
+     **/
+    public static void endScreen(){
+
+        //Set up the frame work
+        menuFrame.remove(contentPane);
+        contentPane = new JPanel(new BorderLayout());
+
+        //Set Default Font
+        setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,16));
+
+        //Create items
+        Leaderboard test = new Leaderboard(playerName, 5);
+        ArrayList<Player> players = test.sortAndGet();
+        JButton returnButton = new JButton("Return to Start Menu");
+        returnButton.setBackground(Color.cyan);
+        returnButton.addActionListener(new returnListener());
+        JLabel title = new JLabel("You have made a score of "+players.get(players.size()-1).getScore());
+        title.setFont(new Font("Courier", Font.CENTER_BASELINE, 19));
+
+        //Add items to sub jpanel
+        JPanel board = new JPanel(new GridLayout(players.size()+1, 1));
+        board.add(new JLabel("Leaderboard: "));
+        for(int i = 0; i < players.size(); i++){
+            board.add(new JLabel((i+1)+"."+players.get(i).getName()+": "+players.get(i).getScore()));
+        }
+
+        //Add items to JPanel
+        contentPane.add(title, BorderLayout.NORTH);
+        contentPane.add(board, BorderLayout.CENTER);
+        contentPane.add(returnButton, BorderLayout.SOUTH);
+        contentPane.add(new JLabel("    "), BorderLayout.WEST);
+
+        //Final settings
+        menuFrame.setContentPane(contentPane);
+        menuFrame.getContentPane().setBackground(Color.cyan);
+        menuFrame.setVisible(true);
+
+    }
+
+    /*******************PART B: ACTION LISTERNERS *************/
+
+    /**
+     * startListener
+     * remakes the JFrame
+     */
+    static class startListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+
+        }
+    }
+
+    /**
+     * gameListener
+     * switches the JFrame to game frame in MainGame.java
+     */
+    static class gameListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+
+        }
+    }
+
+    /**
+     * endListener
+     * remakes the JFrame
+     */
+    static class endListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            endScreen();
+        }
+    }
+
+    /**
+     * returnListener
+     * remakes the JFrame
+     */
+    static class returnListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+
+        }
+    }
+
+
+    /******************PART C: MISCELLALIOUS METHODS**************/
+    /**
+     * setUIFont
+     * set the font for java swing
+     */
+    public static void setUIFont (javax.swing.plaf.FontUIResource f){
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get (key);
+            if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+                UIManager.put (key, f);
+        }
+    }
+
 
 }

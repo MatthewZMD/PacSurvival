@@ -310,7 +310,8 @@ public class MainGame {
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(true);
+        //window.setResizable(true);
+        //window.pack();
         window.setVisible(true);
 
         walLines = new int[window.getWidth()][4];

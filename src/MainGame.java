@@ -99,17 +99,24 @@ public class MainGame {
         menuFrame2 = new JFrame("Survival");
 
         //Set up the frame work
-        JPanel contentPane2 = new JPanel(new GridLayout(7, 1));
+        JPanel contentPane2 = new JPanel(new GridLayout(14, 1));
 
         //Create items
         JButton startButton2 = new JButton("BEGIN");
         startButton2.setBackground(Color.CYAN);
         startButton2.setFont(new Font("Courier", Font.CENTER_BASELINE, 16));
         startButton2.addActionListener(new gameListener());
-        JLabel instruction1 = new JLabel("Objective: find an exit in limited time.");
-        JLabel instruction2 = new JLabel("Yellow: plant +30s of lifespan");
-        JLabel instruction3 = new JLabel("Blue: walker -60s of lifespan");
-        JLabel instruction4 = new JLabel("You lose when there is <=0s left.");
+        JLabel instruction1 = new JLabel("The main objective is find the exit in a limited life-time.");
+        JLabel instruction2 = new JLabel("You'll see some blue-coloured blocks - Walkers");
+        JLabel instruction3 = new JLabel("Once you are in contact with the Walkers, ");
+        JLabel instruction4 = new JLabel("your remaining life-time will decrease, be careful.");
+        JLabel instruction5 = new JLabel("Fortunately, there exist some green-coloured blocks - Plants");
+        JLabel instruction6 = new JLabel("Once you are in contact with the Plants, your life-time increases.");
+        JLabel instruction7 = new JLabel("And you will receive a Plant Buff for a limited amount of time.");
+        JLabel instruction8 = new JLabel("The Plant Buff enables you to attack the Walkers instead of ");
+        JLabel instruction9 = new JLabel("the Walkers damaging you while you are in contact with them.");
+        JLabel instruction10 = new JLabel("However there are some Fake Plants in the maze that brings no");
+        JLabel instruction11 = new JLabel("benefits to you, it's only to mislead you to an unknown destination");
         JLabel title2 = new JLabel("Insert your name to begin: ");
         title2.setFont(new Font("Courier", Font.CENTER_BASELINE, 12));
         name = new JTextField(100);
@@ -119,12 +126,19 @@ public class MainGame {
         contentPane2.add(instruction2);
         contentPane2.add(instruction3);
         contentPane2.add(instruction4);
+        contentPane2.add(instruction5);
+        contentPane2.add(instruction6);
+        contentPane2.add(instruction7);
+        contentPane2.add(instruction8);
+        contentPane2.add(instruction9);
+        contentPane2.add(instruction10);
+        contentPane2.add(instruction11);
         contentPane2.add(title2);
         contentPane2.add(name);
         contentPane2.add(startButton2);
 
         //Final settings
-        menuFrame2.setSize(300,200);
+        menuFrame2.setSize(600,500);
         menuFrame2.setIconImage(icon.getImage());
         menuFrame2.setContentPane(contentPane2);
         menuFrame2.getContentPane().setBackground(Color.cyan);

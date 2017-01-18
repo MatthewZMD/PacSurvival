@@ -101,6 +101,7 @@ public class MainGame {
         //Set up the frame work
         JPanel contentPane2 = new JPanel(new GridLayout(14, 1));
 
+
         //Create items
         JButton startButton2 = new JButton("BEGIN");
         startButton2.setBackground(Color.CYAN);

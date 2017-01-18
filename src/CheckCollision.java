@@ -16,6 +16,11 @@ public class CheckCollision implements Runnable{
                             System.out.print("You attacked the Walker at " + o.getX() + "," + o.getY() + "! ");
                             ((Walker) o).updateHealth(-100);
                             System.out.println("Walker remaining health: "+((Walker) o).getHealth());
+                            if(((Walker) o).getHealth()<=0){
+                                MainGame.map[(int) o.getY()][(int) o.getX()] = MainGame.map[(int) o.getY()][(int) o.getX()] == 2 ? 0:3;
+                                MainGame.organisms.remove(i);
+                                System.out.println("Walker died");
+                            }
                         } else {
                             System.out.println("You collided with a Walker at " + o.getX() + "," + o.getY());
                             MainGame.remainTime -= 30;

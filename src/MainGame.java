@@ -252,6 +252,7 @@ public class MainGame {
             updateMovement();
             window.repaint();
 
+
             if(start&&oldTime==0){
                 oldTime = System.nanoTime();
             }else if(start&&deltaSecond(oldTime)==0.5){

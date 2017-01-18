@@ -21,7 +21,7 @@ public class MainGame {
     public static Player player = new Player("MT",64,138,-1,0);
 
     //the 2d raycaster version of camera plane
-    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0004,rotSpeed = 0.0002;
+    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.00035,rotSpeed = 0.00015;
 
     public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
 
@@ -287,8 +287,8 @@ public class MainGame {
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
-                    int walkerNum = (int) Math.round(4000/(deltaSecond(startTime)+50));
-                    int plantNum = (int) Math.round(10000/(deltaSecond(startTime)+100));
+                    int walkerNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*4000/(deltaSecond(startTime)+100) );
+                    int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
 //                    System.out.println(deltaSecond(startTime));
                     spawn(walkerNum,plantNum);
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
@@ -573,6 +573,7 @@ public class MainGame {
             playerName = name.getText();
             //Temporarily open a new game menuFrame, run the game.
             start = true;
+            window.setFocusable(true);
             window.setVisible(true);
         }
     }

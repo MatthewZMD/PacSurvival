@@ -22,7 +22,7 @@ public class MainGame {
     public static Player player = new Player("MT",64,138,-1,0);
 
     //the 2d raycaster version of camera plane
-    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.15,rotSpeed = 0.05;
+    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.00035,rotSpeed = 0.00013;
 
     public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
 
@@ -37,7 +37,7 @@ public class MainGame {
     public static String playerName;
     public static JTextField name;
 
-    public static boolean run = false;
+    public static boolean start = false,left,right,up,down;
 
     //Below starts the methods (screens)
     //Main method
@@ -89,11 +89,11 @@ public class MainGame {
         ImageIcon icon = new ImageIcon("gameIcon.png");
         menuFrame.setIconImage(icon.getImage());
         menuFrame.setSize(600,600);
-        menuFrame.setVisible(true);
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
         //menuFrame.setVisible(true);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        menuFrame.setVisible(true);
 
         //********************/
 
@@ -121,6 +121,7 @@ public class MainGame {
         menuFrame2.setIconImage(icon.getImage());
         menuFrame2.setContentPane(contentPane2);
         menuFrame2.getContentPane().setBackground(Color.cyan);
+        menuFrame2.setVisible(false);
         menuFrame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         window.setSize(1280,900);
@@ -129,9 +130,10 @@ public class MainGame {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setVisible(false);
-        run = false;
-    }
+        walLines = new int[window.getWidth()][4];
 
+        newGame();
+    }
     public static void newGame() throws FileNotFoundException {
         readMap();
 
@@ -143,7 +145,6 @@ public class MainGame {
         }
         System.out.println(count);
 
-        walLines = new int[window.getWidth()][4];
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
 
@@ -154,12 +155,16 @@ public class MainGame {
         Thread walkerAI = new Thread(new WalkerAI());
         walkerAI.start();
 
-        long oldTime = System.nanoTime();
+        long oldTime = 0;
+        boolean alive = true;
 
-        organisms.add(new Walker(138,61,0,0,30,1));
-        organisms.add(new Plant(138,62,30));
+        //Initial tutorial
+//        if(start){
+//            organisms.add(new Walker(138,61,0,0,30,1));
+//            organisms.add(new Plant(137,62,30));
+//        }
 
-        while(run){
+        while(alive){
             for(int x = 0;x<window.getWidth();x++){
                 //calculate ray position and direction
                 cameraX = 2 * x/(double)window.getWidth() - 1; //x-coordinate in camera space
@@ -244,10 +249,13 @@ public class MainGame {
                 walLines[x][2] = map[mapX][mapY];
                 walLines[x][3] = side;
             }
-            world.repaint();
+            updateMovement();
             window.repaint();
 
-            if(deltaSecond(oldTime)==0.5){
+
+            if(start&&oldTime==0){
+                oldTime = System.nanoTime();
+            }else if(start&&deltaSecond(oldTime)==0.5){
                 remainTime-=0.5;
                 if(plantRemainTime>0){
                     plantRemainTime-=0.5;
@@ -255,14 +263,13 @@ public class MainGame {
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
-                    spawn(20,20);
+                    spawn(50,100);
                     spawnTime = 60;
                 }
                 oldTime = System.nanoTime();
             }
 //            System.out.println(player.getX()+" "+player.getY());
-            window.setVisible(true);
-            run = remainTime>0; //End when remain time <= 0
+            alive = remainTime>0; //End when remain time <= 0
         }
         endGameScreen();
     }
@@ -275,7 +282,7 @@ public class MainGame {
                 y = (int) (Math.random() * map.length);
             }while(map[y][x]==1||map[y][x]==2||map[y][x]==4);
             organisms.add(new Walker(x,y,-1,0, 300,(int) (Math.random()*2+1)));
-            map[y][x] = map[y][x]==0 ? 2:4;
+//            map[y][x] = map[y][x]==0 ? 2:4;
         }
         for(int p = 0;p<plantNum;p++){
             do {
@@ -283,9 +290,9 @@ public class MainGame {
                 y = (int) (Math.random() * map.length);
             }while(map[y][x]==1||map[y][x]==3||map[y][x]==4);
             organisms.add(new Plant(x,y,180));
-            map[y][x] = map[y][x]==0 ? 3:4;
+//            map[y][x] = map[y][x]==0 ? 3:4;
         }
-        System.out.println("finished");
+        System.out.println("Spawned");
     }
 
     public static void readMap() throws FileNotFoundException {
@@ -321,7 +328,6 @@ public class MainGame {
     public static class World extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            System.out.println(false);
             for(int x = 0;x<walLines.length;x++){
 //                for(int y = 0;y<2;y++){
                 if(walLines[x][3]==1){
@@ -355,47 +361,22 @@ public class MainGame {
     }
 
     public static class keyListener implements KeyListener {
-        double changeX,changeY;
         int factor = 10;
         @Override
         public void keyPressed(KeyEvent e) {
             //Get the key pressed
-            System.out.println(true);
             int key = e.getKeyCode();
             if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_D){
-                //both camera direction and camera plane are rotated
-                double oldDirX = player.getDirX();
-                player.setDirX(player.getDirX() * Math.cos(-rotSpeed) - player.getDirY() * Math.sin(-rotSpeed));
-                player.setDirY(oldDirX * Math.sin(-rotSpeed) + player.getDirY() * Math.cos(-rotSpeed));
-                double oldPlaneX = planeX;
-                planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
-                planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
-//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
-            }else if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
-                double oldDirX = player.getDirX();
-                player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
-                player.setDirY(oldDirX * Math.sin(rotSpeed) + player.getDirY() * Math.cos(rotSpeed));
-                double oldPlaneX = planeX;
-                planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
-                planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
-//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+                right = true;
+            }
+            if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
+                left = true;
             }
             if(key==KeyEvent.VK_UP||key==KeyEvent.VK_W){
-                if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
-                    player.setX(player.getX()+(player.getDirX()*moveSpeed));
-                }
-                if(map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] != 1){
-                    player.setY(player.getY()+(player.getDirY()*moveSpeed));
-                }
-//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
-            }else if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
-                if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
-                    player.setX(player.getX()-(player.getDirX()*moveSpeed));
-                }
-                if(map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] != 1){
-                    player.setY(player.getY()-(player.getDirY()*moveSpeed));
-                }
-//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+                up = true;
+            }
+            if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
+                down = true;
             }
         }
 
@@ -404,10 +385,64 @@ public class MainGame {
         }
         @Override
         public void keyReleased(KeyEvent e) {
+            int key = e.getKeyCode();
+            if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_D){
+                right = false;
+            }
+            if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
+                left = false;
+            }
+            if(key==KeyEvent.VK_UP||key==KeyEvent.VK_W){
+                up = false;
+            }
+            if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
+                down = false;
+            }
 //            System.out.println(false);
         }
 
     }
+
+    public static void updateMovement(){
+        if(right){
+            //both camera direction and camera plane are rotated
+            double oldDirX = player.getDirX();
+            player.setDirX(player.getDirX() * Math.cos(-rotSpeed) - player.getDirY() * Math.sin(-rotSpeed));
+            player.setDirY(oldDirX * Math.sin(-rotSpeed) + player.getDirY() * Math.cos(-rotSpeed));
+            double oldPlaneX = planeX;
+            planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
+            planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
+//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+        }
+        if(left){
+            double oldDirX = player.getDirX();
+            player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
+            player.setDirY(oldDirX * Math.sin(rotSpeed) + player.getDirY() * Math.cos(rotSpeed));
+            double oldPlaneX = planeX;
+            planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
+            planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
+//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
+        }
+        if(up){
+            if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
+                player.setX(player.getX()+(player.getDirX()*moveSpeed));
+            }
+            if(map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] != 1){
+                player.setY(player.getY()+(player.getDirY()*moveSpeed));
+            }
+//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+        }
+        if(down){
+            if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
+                player.setX(player.getX()-(player.getDirX()*moveSpeed));
+            }
+            if(map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] != 1){
+                player.setY(player.getY()-(player.getDirY()*moveSpeed));
+            }
+//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
+        }
+    }
+
 
     /***************PART A: Methods of different menuFrame screens *********/
 
@@ -509,14 +544,8 @@ public class MainGame {
             //Get the name of the player
             playerName = name.getText();
             //Temporarily open a new game menuFrame, run the game.
-            run = true;
+            start = true;
             window.setVisible(true);
-            try{
-                newGame();
-            }catch(FileNotFoundException e){
-
-            }
-
         }
     }
 

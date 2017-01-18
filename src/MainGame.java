@@ -264,7 +264,9 @@ public class MainGame {
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
-                    spawn(50,100);
+//                    System.out.println(deltaSecond(startTime));
+                    spawn((int) Math.round(5000/(deltaSecond(startTime)+100)),(int) Math.round(5000/(deltaSecond(startTime)+50)));
+                    System.out.println("Spawned "+(int) Math.round(5000/(deltaSecond(startTime)+100))+" Walkers and "+(int) Math.round(5000/(deltaSecond(startTime)+50))+" plants.");
                     spawnTime = 60;
                 }
                 oldTime = System.nanoTime();
@@ -293,7 +295,7 @@ public class MainGame {
             organisms.add(new Plant(x,y,180));
 //            map[y][x] = map[y][x]==0 ? 3:4;
         }
-        System.out.println("Spawned");
+//        System.out.println("Spawned");
     }
 
     public static void readMap() throws FileNotFoundException {

@@ -16,6 +16,7 @@ public class MainGame {
 
     public static JFrame window = new JFrame("Survival");
     public static World world = new World();
+    public static JFrame menuFrame2, menuFrame3;
 
     //Create player object
     public static Player player = new Player("MT",64,138,-1,0);
@@ -90,8 +91,37 @@ public class MainGame {
         menuFrame.setSize(600,600);
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setVisible(true);
+        //menuFrame.setVisible(true);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //********************/
+
+        menuFrame2 = new JFrame("Survival");
+
+        //Set up the frame work
+        JPanel contentPane2 = new JPanel(new GridLayout(3, 1));
+
+        //Create items
+        JButton startButton2 = new JButton("BEGIN");
+        startButton2.setBackground(Color.CYAN);
+        startButton2.setFont(new Font("Courier", Font.CENTER_BASELINE, 16));
+        startButton2.addActionListener(new gameListener());
+        JLabel title2 = new JLabel("Insert your name to begin: ");
+        title2.setFont(new Font("Courier", Font.CENTER_BASELINE, 12));
+        name = new JTextField(100);
+
+        //Add items to JPanel
+        contentPane2.add(title2);
+        contentPane2.add(name);
+        contentPane2.add(startButton2);
+
+        //Final settings
+        menuFrame2.setSize(300,200);
+        menuFrame2.setIconImage(icon.getImage());
+        menuFrame2.setContentPane(contentPane2);
+        menuFrame2.getContentPane().setBackground(Color.cyan);
+        menuFrame2.setVisible(true);
+        menuFrame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         window.setSize(1280,900);
         window.getContentPane().add(world);
@@ -100,42 +130,6 @@ public class MainGame {
         window.setResizable(false);
         window.setVisible(false);
         run = false;
-
-
-        //Set up the frame work
-        menuFrame.remove(contentPane);
-        contentPane = new JPanel();
-        contentPane = new JPanel(new GridLayout(3, 1));
-
-        //Create items
-        startButton = new JButton("BEGIN");
-        startButton.setBackground(Color.CYAN);
-        startButton.setFont(new Font("Courier", Font.CENTER_BASELINE, 16));
-        startButton.addActionListener(new gameListener());
-        title = new JLabel("Insert your name to begin: ");
-        title.setFont(new Font("Courier", Font.CENTER_BASELINE, 12));
-        name = new JTextField(100);
-
-        //Add items to JPanel
-        contentPane.add(title);
-        contentPane.add(name);
-        contentPane.add(startButton);
-
-        //Final settings
-        menuFrame.setContentPane(contentPane);
-        menuFrame.setSize(300,200);
-        menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setVisible(true);
-
-
-        //Get the name of the player
-        playerName = name.getText();
-        //Temporarily open a new game menuFrame, run the game.
-        menuFrame.setVisible(false);
-        run = true;
-        window.setVisible(true);
-
-        newGame();
     }
 
     public static void newGame() throws FileNotFoundException {
@@ -423,7 +417,7 @@ public class MainGame {
     public static void endGameScreen(){
 
         //Reset the frame work
-        menuFrame.remove(contentPane);
+        menuFrame3 = new JFrame("Survival");
         contentPane = new JPanel(new BorderLayout());
 
         //Create items
@@ -443,10 +437,11 @@ public class MainGame {
         contentPane.add(endButton, BorderLayout.SOUTH);
 
         //Final settings
-        menuFrame.setSize(600, 600);
-        menuFrame.setContentPane(contentPane);
-        menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setVisible(true);
+        menuFrame3.setSize(600, 600);
+        menuFrame3.setContentPane(contentPane);
+        menuFrame3.getContentPane().setBackground(Color.cyan);
+        window.setVisible(false);
+        menuFrame3.setVisible(true);
 
     }
 
@@ -456,7 +451,7 @@ public class MainGame {
     public static void endScreen(){
 
         //Set up the frame work
-        menuFrame.remove(contentPane);
+        menuFrame3.remove(contentPane);
         contentPane = new JPanel(new BorderLayout());
 
         //Set Default Font
@@ -499,7 +494,8 @@ public class MainGame {
      */
     static class startListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-
+            menuFrame.setVisible(false);
+            menuFrame2.setVisible(true);
         }
     }
 
@@ -509,6 +505,17 @@ public class MainGame {
      */
     static class gameListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            menuFrame2.setVisible(false);
+            //Get the name of the player
+            playerName = name.getText();
+            //Temporarily open a new game menuFrame, run the game.
+            run = true;
+            window.setVisible(true);
+            try{
+                newGame();
+            }catch(FileNotFoundException e){
+
+            }
 
         }
     }
@@ -529,7 +536,8 @@ public class MainGame {
      */
     static class returnListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-
+            menuFrame3.setVisible(false);
+            menuFrame.setVisible(true);
         }
     }
 

@@ -18,12 +18,14 @@ public class MainGame {
     public static World world = new World();
 
     //Create player object
-    public static Player player = new Player("MT",64,138,-1,0);
+    public static Player player = new Player("MT",65,137,-1,0);
 
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.00035,rotSpeed = 0.00015;
 
     public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
+
+    public static boolean win = false;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
     //Matthew did this
@@ -93,6 +95,7 @@ public class MainGame {
         //menuFrame.setVisible(true);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setVisible(true);
+        menuFrame.setFocusable(true);
 
         //********************/
 
@@ -188,7 +191,7 @@ public class MainGame {
 //            organisms.add(new Plant(137,62,30));
 //        }
 
-        while(alive){
+        while(alive&&!win){
             for(int x = 0;x<window.getWidth();x++){
                 //calculate ray position and direction
                 cameraX = 2 * x/(double)window.getWidth() - 1; //x-coordinate in camera space
@@ -298,6 +301,7 @@ public class MainGame {
             }
 //            System.out.println(player.getX()+" "+player.getY());
             alive = remainTime>0; //End when remain time <= 0
+            win = map[(int) player.getX()][(int)player.getY()]==8;
         }
         endGameScreen();
     }
@@ -376,6 +380,10 @@ public class MainGame {
                 }else if(walLines[x][2]==4){
                     //Mixed
                     g.setColor(Color.YELLOW);
+                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
+                }else if(walLines[x][2]==8){
+                    //Exit
+                    g.setColor(Color.PINK);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
 //                }
@@ -505,6 +513,7 @@ public class MainGame {
         menuFrame3.getContentPane().setBackground(Color.cyan);
         window.setVisible(false);
         menuFrame3.setVisible(true);
+        menuFrame3.setFocusable(true);
 
     }
 
@@ -546,6 +555,7 @@ public class MainGame {
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
         menuFrame.setVisible(true);
+        menuFrame.setFocusable(true);
 
     }
 
@@ -559,6 +569,7 @@ public class MainGame {
         public void actionPerformed(ActionEvent event) {
             menuFrame.setVisible(false);
             menuFrame2.setVisible(true);
+            menuFrame2.setFocusable(true);
         }
     }
 
@@ -596,6 +607,7 @@ public class MainGame {
         public void actionPerformed(ActionEvent event) {
             menuFrame3.setVisible(false);
             menuFrame.setVisible(true);
+            menuFrame.setFocusable(true);
         }
     }
 

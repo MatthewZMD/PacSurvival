@@ -24,6 +24,7 @@ public class MainGame {
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0004,rotSpeed = 0.0002;
 
     public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
+    public static long startTime=0;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
     //Matthew did this
@@ -35,6 +36,7 @@ public class MainGame {
     public static JFrame menuFrame, menuFrame2, menuFrame3;
     public static String playerName;
     public static JTextField name;
+    public static ImageIcon icon = new ImageIcon("gameIcon.png");
 
     public static boolean start = false,left,right,up,down;
 
@@ -85,7 +87,6 @@ public class MainGame {
         contentPane.add(new JLabel(new ImageIcon("backGround.png")));
 
         //Final settings
-        ImageIcon icon = new ImageIcon("gameIcon.png");
         menuFrame.setIconImage(icon.getImage());
         menuFrame.setSize(600,600);
         menuFrame.setContentPane(contentPane);
@@ -100,7 +101,6 @@ public class MainGame {
 
         //Set up the frame work
         JPanel contentPane2 = new JPanel(new GridLayout(14, 1));
-
 
         //Create items
         JButton startButton2 = new JButton("BEGIN");
@@ -179,7 +179,7 @@ public class MainGame {
         Thread walkerAI = new Thread(new WalkerAI());
         walkerAI.start();
 
-        long oldTime = 0,startTime = 0;
+        long oldTime = 0;
         boolean alive = true;
 
         //Initial tutorial
@@ -472,6 +472,9 @@ public class MainGame {
     }
 
 
+
+    /******************************Additional GUI Methods***************************/
+
     /***************PART A: Methods of different menuFrame screens *********/
 
     /**editGameScreen()
@@ -491,18 +494,24 @@ public class MainGame {
 
         //Add items to JPanel
 
-        JPanel endGamePanel = new JPanel(new GridLayout(4, 1));
-        endGamePanel.add(new JLabel("Game Over"));
-        endGamePanel.add(new JLabel("Player has killed this many walkers"));
-        endGamePanel.add(new JLabel("Player has survived for this amount of time."));
+        JPanel endGamePanel = new JPanel(new GridLayout(3, 1));
+        endGamePanel.add(new JLabel("Game Ended"));
+        endGamePanel.add(new JLabel("Player has survived for "+deltaSecond(startTime)+"s."));
+//        if(win){
+//            endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!");
+//        }else{
+//            endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again");
+//        }
+
 
         contentPane.add(endGamePanel, BorderLayout.CENTER);
         contentPane.add(endButton, BorderLayout.SOUTH);
 
         //Final settings
-        menuFrame3.setSize(600, 600);
+        menuFrame3.setSize(600, 300);
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
+        menuFrame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(false);
         menuFrame3.setVisible(true);
 
@@ -511,38 +520,50 @@ public class MainGame {
     /**endScreen()
      * This method  is for displaying leaderboard + player score.
      **/
-    public static void endScreen(){
+    public static void endScreen() {
 
         //Set up the frame work
         menuFrame3.remove(contentPane);
         contentPane = new JPanel(new BorderLayout());
 
         //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,16));
+        setUIFont(new javax.swing.plaf.FontUIResource("Courier", Font.CENTER_BASELINE, 16));
+
+//      if(win){
+//          int totalScore = 1.5*delta(startTime);
+//      }else{
+//          int totalScore = delta(startTime);
+//      }
 
         //Create items
-        Leaderboard test = new Leaderboard(playerName, 5);
+        int totalScore = 0;
+        Leaderboard test = new Leaderboard(playerName, totalScore);
         ArrayList<Player> players = test.sortAndGet();
-        JButton returnButton = new JButton("Return to Start Menu");
+        JButton returnButton = new JButton("Exit the Game");
         returnButton.setBackground(Color.cyan);
         returnButton.addActionListener(new returnListener());
         JLabel title = new JLabel("You have made a score of "+players.get(players.size()-1).getScore());
-        title.setFont(new Font("Courier", Font.CENTER_BASELINE, 19));
+        title.setFont(new Font("Calibri", Font.CENTER_BASELINE, 19));
 
         //Add items to sub jpanel
         JPanel board = new JPanel(new GridLayout(players.size()+1, 1));
-        board.add(new JLabel("Leaderboard: "));
+        board.add(new JLabel("                                 Leaderboard: "));
         for(int i = 0; i < players.size(); i++){
             board.add(new JLabel((i+1)+"."+players.get(i).getName()+": "+players.get(i).getScore()));
         }
 
         //Add items to JPanel
+
         contentPane.add(title, BorderLayout.NORTH);
         contentPane.add(board, BorderLayout.CENTER);
         contentPane.add(returnButton, BorderLayout.SOUTH);
         contentPane.add(new JLabel("    "), BorderLayout.WEST);
+        contentPane.add(new JLabel("    "), BorderLayout.EAST);
+        contentPane.getLsetHgap();
 
         //Final settings
+        menuFrame.setSize(300, 500);
+        menuFrame3.setIconImage(icon.getImage());
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
         menuFrame3.setVisible(true);
@@ -589,12 +610,11 @@ public class MainGame {
 
     /**
      * returnListener
-     * remakes the JFrame
+     * closes the JFrame
      */
     static class returnListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             menuFrame3.setVisible(false);
-            menuFrame.setVisible(true);
         }
     }
 

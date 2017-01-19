@@ -506,9 +506,9 @@ public class MainGame {
         endGamePanel.add(new JLabel("Game Ended"));
         endGamePanel.add(new JLabel("Player has survived for "+deltaSecond(startTime)+"s."));
         if(win){
-            endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!");
+            endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!"));
         }else{
-            endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again");
+            endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again"));
         }
 
 
@@ -568,7 +568,6 @@ public class MainGame {
         contentPane.add(returnButton, BorderLayout.SOUTH);
         contentPane.add(new JLabel("    "), BorderLayout.WEST);
         contentPane.add(new JLabel("    "), BorderLayout.EAST);
-        contentPane.getLsetHgap();
 
         //Final settings
         menuFrame.setSize(300, 500);

@@ -542,9 +542,9 @@ public class MainGame {
         contentPane.add(new JLabel("    "), BorderLayout.WEST);
 
         //Final settings
-        menuFrame.setContentPane(contentPane);
-        menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setVisible(true);
+        menuFrame3.setContentPane(contentPane);
+        menuFrame3.getContentPane().setBackground(Color.cyan);
+        menuFrame3.setVisible(true);
 
     }
 

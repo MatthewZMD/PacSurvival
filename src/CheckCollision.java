@@ -1,5 +1,7 @@
 public class CheckCollision implements Runnable{
 
+public static double collideTime, attackTime, walkerDiedTime, plantReceivedTime;
+
 	public synchronized void run() {
 		while(true){
 //		System.out.println("Collisioning Size: "+MainGame.organisms.size());
@@ -16,13 +18,16 @@ public class CheckCollision implements Runnable{
                             System.out.print("You attacked the Walker at " + o.getX() + "," + o.getY() + "! ");
                             ((Walker) o).updateHealth(-100);
                             System.out.println("Walker remaining health: "+((Walker) o).getHealth());
+                            attackTime=3;
                             if(((Walker) o).getHealth()<=0){
                                 MainGame.map[(int) o.getY()][(int) o.getX()] = MainGame.map[(int) o.getY()][(int) o.getX()] == 2 ? 0:3;
                                 MainGame.organisms.remove(i);
                                 System.out.println("Walker died");
+                                walkerDiedTime=3;
                             }
                         } else {
                             System.out.println("You collided with a Walker at " + o.getX() + "," + o.getY());
+                            collideTime = 3;
                             MainGame.remainTime -= 30;
                         }
                     } else if (o instanceof Plant) {
@@ -31,6 +36,7 @@ public class CheckCollision implements Runnable{
                         System.out.println("You ate a plant at " + o.getX() + "," + o.getY());
                         MainGame.map[(int) o.getY()][(int) o.getX()] = MainGame.map[(int) o.getY()][(int) o.getX()] == 4 ? 2 : 0;
                         MainGame.organisms.remove(i);
+                        plantReceivedTime=3;
                     }
                     try {
                         Thread.sleep(1000);

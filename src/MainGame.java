@@ -63,7 +63,7 @@ public class MainGame {
 
         //Create item
         startButton = new JButton("Start");
-        startButton.setFont(new Font("Courier", Font.CENTER_BASELINE, 25));
+        startButton.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 25));
         startButton.addActionListener(new startListener());
         startButton.setBackground(Color.yellow);
         JLabel filler = new JLabel("                        ");
@@ -306,6 +306,18 @@ public class MainGame {
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
                     spawnTime = 60;
                 }
+                if(CheckCollision.attackTime > 0){
+                    CheckCollision.attackTime-= 0.5;
+                }
+                if(CheckCollision.collideTime > 0){
+                    CheckCollision.collideTime-= 0.5;
+                }
+                if(CheckCollision.walkerDiedTime > 0){
+                    CheckCollision.walkerDiedTime-= 0.5;
+                }
+                if(CheckCollision.plantReceivedTime > 0){
+                    CheckCollision.plantReceivedTime-= 0.5;
+                }
                 oldTime = System.nanoTime();
             }
 //            System.out.println(player.getX()+" "+player.getY());
@@ -401,6 +413,20 @@ public class MainGame {
             g.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
             g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
+            g.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 20));
+            if(CheckCollision.collideTime > 0){
+                g.drawString("A walker attacked you.", 0, 90);
+            }
+            if(CheckCollision.attackTime > 0){
+                g.drawString("You attacked a walker.", 0, 110);
+            }
+            if(CheckCollision.walkerDiedTime > 0){
+                g.drawString("A walker died from your hands!", 0, 130);
+            }
+            if(CheckCollision.plantReceivedTime > 0){
+                g.drawString("You ate a plant!", 0, 150);
+            }
+
             //repaint();
         }
     }
@@ -504,7 +530,6 @@ public class MainGame {
 
         //Create items
         ImageIcon image = new ImageIcon("backGround.jpg");
-        JLabel label = new JLabel("", image, JLabel.CENTER);
         JButton endButton = new JButton("Check your Score");
         endButton.addActionListener(new endListener());
 
@@ -518,7 +543,6 @@ public class MainGame {
         }else{
             endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again"));
         }
-
 
         contentPane.add(endGamePanel, BorderLayout.CENTER);
         contentPane.add(endButton, BorderLayout.SOUTH);
@@ -546,21 +570,21 @@ public class MainGame {
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Courier", Font.CENTER_BASELINE, 16));
 
-//      if(win){
-//          int totalScore = 1.5*delta(startTime);
-//      }else{
-//          int totalScore = delta(startTime);
-//      }
+        int totalScore;
+        if(win){
+            totalScore = (int)(1.5*deltaSecond(startTime));
+        }else{
+            totalScore = (int)deltaSecond(startTime);
+        }
 
         //Create items
-        int totalScore = 0;
         Leaderboard test = new Leaderboard(playerName, totalScore);
         ArrayList<Player> players = test.sortAndGet();
         JButton returnButton = new JButton("Exit the Game");
         returnButton.setBackground(Color.cyan);
         returnButton.addActionListener(new returnListener());
         JLabel title = new JLabel("You have made a score of "+players.get(players.size()-1).getScore());
-        title.setFont(new Font("Calibri", Font.CENTER_BASELINE, 19));
+        title.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 19));
 
         //Add items to sub jpanel
         JPanel board = new JPanel(new GridLayout(players.size()+1, 1));

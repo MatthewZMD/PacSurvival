@@ -29,6 +29,7 @@ public class MainGame {
     public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
+
     public static boolean win = false;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();

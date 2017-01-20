@@ -27,8 +27,6 @@ public class MainGame {
     public static long startTime=0;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
-    //Matthew did this
-    //Jim did this
 
     //Declare Variables
     public static JButton startButton;
@@ -46,7 +44,7 @@ public class MainGame {
         menuFrame = new JFrame("Survival");
 
         //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,15));
+        setUIFont(new javax.swing.plaf.FontUIResource("Baskerville",Font.CENTER_BASELINE,15));
 
         //Set up the frame work
         contentPane = new JPanel(new GridLayout(2,2));
@@ -158,6 +156,7 @@ public class MainGame {
 
         newGame();
     }
+
     public static void newGame() throws FileNotFoundException {
         readMap();
 
@@ -472,7 +471,6 @@ public class MainGame {
     }
 
 
-
     /******************************Additional GUI Methods***************************/
 
     /***************PART A: Methods of different menuFrame screens *********/
@@ -559,7 +557,6 @@ public class MainGame {
         contentPane.add(returnButton, BorderLayout.SOUTH);
         contentPane.add(new JLabel("    "), BorderLayout.WEST);
         contentPane.add(new JLabel("    "), BorderLayout.EAST);
-        contentPane.getLsetHgap();
 
         //Final settings
         menuFrame.setSize(300, 500);
@@ -618,8 +615,7 @@ public class MainGame {
         }
     }
 
-
-    /******************PART C: MISCELLALIOUS METHODS**************/
+    /******************PART C: MISCELLALIOUS METHOD**************/
     /**
      * setUIFont
      * set the font for java swing
@@ -633,6 +629,5 @@ public class MainGame {
                 UIManager.put (key, f);
         }
     }
-
 
 }

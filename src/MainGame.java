@@ -26,7 +26,7 @@ public class MainGame {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 0.1 , plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
 
@@ -101,7 +101,6 @@ public class MainGame {
         menuFrame.setSize(600,600);
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
-        //menuFrame.setVisible(true);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setVisible(true);
         menuFrame.setFocusable(true);
@@ -159,6 +158,7 @@ public class MainGame {
 
         /*************/
 
+        window.setIconImage(icon.getImage());
         window.setSize(1280,900);
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
@@ -412,19 +412,21 @@ public class MainGame {
             g.setColor(Color.RED);
             g.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
-            g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
             g.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 20));
+            if((int)plantRemainTime > 0){
+                g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
+            }
             if(CheckCollision.collideTime > 0){
-                g.drawString("A walker attacked you.", 0, 90);
+                g.drawString("A walker attacked you.", 0, 80);
             }
             if(CheckCollision.attackTime > 0){
-                g.drawString("You attacked a walker.", 0, 110);
+                g.drawString("You attacked a walker.", 0, 100);
             }
             if(CheckCollision.walkerDiedTime > 0){
-                g.drawString("A walker died from your hands!", 0, 130);
+                g.drawString("A walker died from your hands!", 0, 120);
             }
             if(CheckCollision.plantReceivedTime > 0){
-                g.drawString("You ate a plant!", 0, 150);
+                g.drawString("You ate a plant!", 0, 140);
             }
 
         }
@@ -530,23 +532,25 @@ public class MainGame {
         //Create items
         ImageIcon image = new ImageIcon("backGround.jpg");
         JButton endButton = new JButton("Check your Score");
+        endButton.setBackground(Color.CYAN);
         endButton.addActionListener(new endListener());
 
         //Add items to JPanel
 
         JPanel endGamePanel = new JPanel(new GridLayout(3, 1));
         endGamePanel.add(new JLabel("Game Ended"));
-        endGamePanel.add(new JLabel("Player has survived for "+deltaSecond(startTime)+"s."));
+        endGamePanel.add(new JLabel(name+" has survived for "+deltaSecond(startTime)+"s."));
         if(win){
             endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!"));
         }else{
-            endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again"));
+            endGamePanel.add(new JLabel("Unfortunately, you lost... But you can try again"));
         }
 
         contentPane.add(endGamePanel, BorderLayout.CENTER);
         contentPane.add(endButton, BorderLayout.SOUTH);
 
         //Final settings
+        menuFrame.setIconImage(icon.getImage());
         menuFrame3.setSize(600, 300);
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
@@ -601,8 +605,7 @@ public class MainGame {
         contentPane.add(new JLabel("    "), BorderLayout.EAST);
 
         //Final settings
-        menuFrame.setSize(300, 500);
-        menuFrame3.setIconImage(icon.getImage());
+        menuFrame3.setSize(300, 500);
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
         menuFrame3.setVisible(true);

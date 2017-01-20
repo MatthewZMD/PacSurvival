@@ -1,3 +1,6 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,13 +21,15 @@ public class MainGame {
     public static World world = new World();
 
     //Create player object
-    public static Player player = new Player("MT",64,138,-1,0);
+    public static Player player = new Player("MT",65,137,-1,0);
 
     //the 2d raycaster version of camera plane
-    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0004,rotSpeed = 0.0002;
+    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.00035,rotSpeed = 0.00015;
 
     public static double remainTime = 60 * 5 , plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
+
+    public static boolean win = false;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
 
@@ -38,10 +43,16 @@ public class MainGame {
 
     public static boolean start = false,left,right,up,down;
 
+    public static Clip gameMusic;
+
     //Below starts the methods (screens)
     //Main method
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
         menuFrame = new JFrame("Survival");
+
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("ShionTownTheme.wav").getAbsoluteFile());
+        gameMusic = AudioSystem.getClip();
+        gameMusic.open(audioInputStream);
 
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Baskerville",Font.CENTER_BASELINE,15));
@@ -92,6 +103,7 @@ public class MainGame {
         //menuFrame.setVisible(true);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setVisible(true);
+        menuFrame.setFocusable(true);
 
         //********************/
 
@@ -187,7 +199,7 @@ public class MainGame {
 //            organisms.add(new Plant(137,62,30));
 //        }
 
-        while(alive){
+        while(alive&&!win){
             for(int x = 0;x<window.getWidth();x++){
                 //calculate ray position and direction
                 cameraX = 2 * x/(double)window.getWidth() - 1; //x-coordinate in camera space
@@ -286,8 +298,8 @@ public class MainGame {
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
-                    int walkerNum = (int) Math.round(4000/(deltaSecond(startTime)+50));
-                    int plantNum = (int) Math.round(10000/(deltaSecond(startTime)+100));
+                    int walkerNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*4000/(deltaSecond(startTime)+100) );
+                    int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
 //                    System.out.println(deltaSecond(startTime));
                     spawn(walkerNum,plantNum);
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
@@ -297,6 +309,7 @@ public class MainGame {
             }
 //            System.out.println(player.getX()+" "+player.getY());
             alive = remainTime>0; //End when remain time <= 0
+            win = map[(int) player.getX()][(int)player.getY()]==8;
         }
         endGameScreen();
     }
@@ -375,6 +388,10 @@ public class MainGame {
                 }else if(walLines[x][2]==4){
                     //Mixed
                     g.setColor(Color.YELLOW);
+                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
+                }else if(walLines[x][2]==8){
+                    //Exit
+                    g.setColor(Color.PINK);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
 //                }
@@ -495,11 +512,11 @@ public class MainGame {
         JPanel endGamePanel = new JPanel(new GridLayout(3, 1));
         endGamePanel.add(new JLabel("Game Ended"));
         endGamePanel.add(new JLabel("Player has survived for "+deltaSecond(startTime)+"s."));
-//        if(win){
-//            endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!");
-//        }else{
-//            endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again");
-//        }
+        if(win){
+            endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!"));
+        }else{
+            endGamePanel.add(new JLabel("Unfortunately, you lost... but you can try it again"));
+        }
 
 
         contentPane.add(endGamePanel, BorderLayout.CENTER);
@@ -512,6 +529,7 @@ public class MainGame {
         menuFrame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(false);
         menuFrame3.setVisible(true);
+        menuFrame3.setFocusable(true);
 
     }
 
@@ -545,7 +563,7 @@ public class MainGame {
 
         //Add items to sub jpanel
         JPanel board = new JPanel(new GridLayout(players.size()+1, 1));
-        board.add(new JLabel("                                 Leaderboard: "));
+        board.add(new JLabel("Leaderboard: "));
         for(int i = 0; i < players.size(); i++){
             board.add(new JLabel((i+1)+"."+players.get(i).getName()+": "+players.get(i).getScore()));
         }
@@ -564,6 +582,7 @@ public class MainGame {
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
         menuFrame3.setVisible(true);
+        menuFrame3.setFocusable(true);
 
     }
 
@@ -577,6 +596,7 @@ public class MainGame {
         public void actionPerformed(ActionEvent event) {
             menuFrame.setVisible(false);
             menuFrame2.setVisible(true);
+            menuFrame2.setFocusable(true);
         }
     }
 
@@ -591,7 +611,10 @@ public class MainGame {
             playerName = name.getText();
             //Temporarily open a new game menuFrame, run the game.
             start = true;
+            window.setFocusable(true);
             window.setVisible(true);
+            gameMusic.start();
+            gameMusic.loop(10000);
         }
     }
 

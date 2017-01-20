@@ -427,7 +427,6 @@ public class MainGame {
                 g.drawString("You ate a plant!", 0, 150);
             }
 
-            //repaint();
         }
     }
 

@@ -1,3 +1,6 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,10 +45,16 @@ public class MainGame {
 
     public static boolean start = false,left,right,up,down;
 
+    public static Clip gameMusic;
+
     //Below starts the methods (screens)
     //Main method
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
         menuFrame = new JFrame("Survival");
+
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("ShionTownTheme.wav").getAbsoluteFile());
+        gameMusic = AudioSystem.getClip();
+        gameMusic.open(audioInputStream);
 
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Courier",Font.CENTER_BASELINE,15));
@@ -606,6 +615,8 @@ public class MainGame {
             start = true;
             window.setFocusable(true);
             window.setVisible(true);
+            gameMusic.start();
+            gameMusic.loop(10000);
         }
     }
 

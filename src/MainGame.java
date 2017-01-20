@@ -33,6 +33,7 @@ public class MainGame {
     public static boolean win = false;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
+    public static Leaderboard test;
 
     //Declare Variables
     public static JButton startButton;
@@ -51,6 +52,7 @@ public class MainGame {
     public static void main(String[] args) throws Exception {
         menuFrame = new JFrame("Survival");
 
+        //Import music into the game
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("ShionTownTheme.wav").getAbsoluteFile());
         gameMusic = AudioSystem.getClip();
         gameMusic.open(audioInputStream);
@@ -525,6 +527,17 @@ public class MainGame {
      **/
     public static void endGameScreen(){
 
+        //Save the score
+        int totalScore;
+        if(win){
+            totalScore = (int)(1.5*deltaSecond(startTime));
+        }else{
+            totalScore = (int)deltaSecond(startTime);
+        }
+
+        //Create items
+        test = new Leaderboard(playerName, totalScore);
+
         //Reset the frame work
         menuFrame3 = new JFrame("Survival");
         contentPane = new JPanel(new BorderLayout());
@@ -550,7 +563,7 @@ public class MainGame {
         contentPane.add(endButton, BorderLayout.SOUTH);
 
         //Final settings
-        menuFrame.setIconImage(icon.getImage());
+        menuFrame3.setIconImage(icon.getImage());
         menuFrame3.setSize(600, 300);
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
@@ -573,15 +586,6 @@ public class MainGame {
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Courier", Font.CENTER_BASELINE, 16));
 
-        int totalScore;
-        if(win){
-            totalScore = (int)(1.5*deltaSecond(startTime));
-        }else{
-            totalScore = (int)deltaSecond(startTime);
-        }
-
-        //Create items
-        Leaderboard test = new Leaderboard(playerName, totalScore);
         ArrayList<Player> players = test.sortAndGet();
         JButton returnButton = new JButton("Exit the Game");
         returnButton.setBackground(Color.cyan);

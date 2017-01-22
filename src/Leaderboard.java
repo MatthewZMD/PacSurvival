@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Leaderboard {
 
 	//Declare Private Class Variable
-	private ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<Player> players = new ArrayList<>();
 	
 	/**
 	* default constructor
@@ -56,6 +56,7 @@ public class Leaderboard {
 			for(int j = 0; j < i; j++){
 				reWrite.println(players.get(j).getName()+","+players.get(j).getScore());
 			}
+			reWrite.println(name+","+score);
 			reWrite.close();
 			
 		//Report any exception to console
@@ -72,7 +73,7 @@ public class Leaderboard {
 	public ArrayList<Player> sortAndGet(){
 		
 		//Selection sort
-		int max = 0;
+		int max;
 		for(int i = 0; i < players.size(); i++){
 			max = i;
 			for(int j = i; j < players.size(); j++){

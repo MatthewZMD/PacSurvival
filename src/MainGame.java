@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -26,22 +27,25 @@ public class MainGame {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 0.1 , plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 0.1, plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
-
 
     public static boolean win = false;
 
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
-    public static Leaderboard test;
+    private static Leaderboard test;
 
     //Declare Variables
-    public static JButton startButton;
-    public static JPanel contentPane;
-    public static JFrame menuFrame, menuFrame2, menuFrame3;
-    public static String playerName;
-    public static JTextField name;
-    public static ImageIcon icon = new ImageIcon("gameIcon.png");
+    private static JButton startButton;
+    private static JPanel contentPane;
+    //public static SpecialPanel contentPane4;
+    private static JFrame menuFrame, menuFrame2, menuFrame3;
+    private static String playerName;
+    private static JTextField name;
+    private static int totalScore;
+
+    private static Image dbImage;
+    private static ImageIcon icon = new ImageIcon("gameIcon.png");
 
     public static boolean start = false,left,right,up,down;
 
@@ -57,15 +61,19 @@ public class MainGame {
         gameMusic = AudioSystem.getClip();
         gameMusic.open(audioInputStream);
 
+        //Import Background Image
+        dbImage = ImageIO.read(new File("displayBackground2.jpg"));
+
         //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Baskerville",Font.CENTER_BASELINE,15));
+        setUIFont(new javax.swing.plaf.FontUIResource("Georgia",Font.CENTER_BASELINE,15));
 
         //Set up the frame work
-        contentPane = new JPanel(new GridLayout(2,2));
+        contentPane = new SpecialPanel();
+        contentPane.setLayout(new GridLayout(2,2));
 
         //Create item
         startButton = new JButton("Start");
-        startButton.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 25));
+        startButton.setFont(new Font("Georgia", Font.CENTER_BASELINE, 25));
         startButton.addActionListener(new startListener());
         startButton.setBackground(Color.yellow);
         JLabel filler = new JLabel("                        ");
@@ -74,10 +82,9 @@ public class MainGame {
         startButtonPanel.add(filler);
         startButtonPanel.add(startButton);
         startButtonPanel.setBackground(Color.red);
-        startButton.setBounds(1, 2, 20, 10);
         JPanel settingButtonPanel = new JPanel(new FlowLayout());
         JLabel instruction = new JLabel("THE BACKSTORY:");
-        instruction.setFont(new Font("Courier", Font.BOLD, 16));
+        instruction.setFont(new Font("Georgia", Font.BOLD, 16));
         settingButtonPanel.add(instruction);
         settingButtonPanel.add(new JLabel("Jan. 19th, 2038. 03:14:07"));
         settingButtonPanel.add(new JLabel("You are summoned to the world."));
@@ -89,8 +96,8 @@ public class MainGame {
         settingButtonPanel.add(new JLabel("We've great expectations for you."));
         settingButtonPanel.add(new JLabel("Good luck!"));
         settingButtonPanel.setBackground(Color.yellow);
-        JLabel title = new JLabel("  SURVIVAL");
-        title.setFont(new Font("Courier", Font.BOLD, 40));
+        JLabel title = new JLabel("   SURVIVAL");
+        title.setFont(new Font("Georgia", Font.BOLD, 40));
 
         //Add items to JPanel
         contentPane.add(title);
@@ -103,7 +110,7 @@ public class MainGame {
         menuFrame.setSize(600,600);
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
-        menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        menuFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         menuFrame.setVisible(true);
         menuFrame.setFocusable(true);
 
@@ -112,26 +119,27 @@ public class MainGame {
         menuFrame2 = new JFrame("Survival");
 
         //Set up the frame work
-        JPanel contentPane2 = new JPanel(new GridLayout(14, 1));
+        JPanel contentPane2 = new SpecialPanel();
+        contentPane2.setLayout(new GridLayout(14, 1, 10, 0));
 
         //Create items
         JButton startButton2 = new JButton("BEGIN");
         startButton2.setBackground(Color.CYAN);
-        startButton2.setFont(new Font("Courier", Font.CENTER_BASELINE, 16));
+        startButton2.setFont(new Font("Georgia", Font.CENTER_BASELINE, 16));
         startButton2.addActionListener(new gameListener());
-        JLabel instruction1 = new JLabel("The main objective is find the exit in a limited life-time.");
-        JLabel instruction2 = new JLabel("You'll see some blue-coloured blocks - Walkers");
-        JLabel instruction3 = new JLabel("Once you are in contact with the Walkers, ");
-        JLabel instruction4 = new JLabel("your remaining life-time will decrease, be careful.");
-        JLabel instruction5 = new JLabel("Fortunately, there exist some green-coloured blocks - Plants");
-        JLabel instruction6 = new JLabel("Once you are in contact with the Plants, your life-time increases.");
-        JLabel instruction7 = new JLabel("And you will receive a Plant Buff for a limited amount of time.");
-        JLabel instruction8 = new JLabel("The Plant Buff enables you to attack the Walkers instead of ");
-        JLabel instruction9 = new JLabel("the Walkers damaging you while you are in contact with them.");
-        JLabel instruction10 = new JLabel("However there are some Fake Plants in the maze that brings no");
-        JLabel instruction11 = new JLabel("benefits to you, it's only to mislead you to an unknown destination");
-        JLabel title2 = new JLabel("Insert your name to begin: ");
-        title2.setFont(new Font("Courier", Font.CENTER_BASELINE, 12));
+        JLabel instruction1 = new JLabel("         main objective is to find an exit in a limited time.");
+        JLabel instruction2 = new JLabel("  You'll see some blue-coloured blocks called Walkers");
+        JLabel instruction3 = new JLabel("  Once you make contact with them, ");
+        JLabel instruction4 = new JLabel("  your remaining time in maze will decrease, so be careful.");
+        JLabel instruction5 = new JLabel("  Fortunately, some green plant objects exist here.");
+        JLabel instruction6 = new JLabel("  Once you are in contact with the Plants, your life-time increases.");
+        JLabel instruction7 = new JLabel("  And you will receive a Plant Buff for a limited amount of time.");
+        JLabel instruction8 = new JLabel("  The Plant Buff enables you to attack the Walkers instead of ");
+        JLabel instruction9 = new JLabel("  the Walkers damaging you while you are in contact with them.");
+        JLabel instruction10 = new JLabel("  However there are Fake Plants in the maze that bring no");
+        JLabel instruction11 = new JLabel("  benefits. They're only intended to mislead you to an unknown destination.");
+        JLabel title2 = new JLabel("            Insert your name to begin: ");
+        title2.setFont(new Font("Georgia", Font.CENTER_BASELINE, 12));
         name = new JTextField(100);
 
         //Add items to JPanel
@@ -156,7 +164,7 @@ public class MainGame {
         menuFrame2.setContentPane(contentPane2);
         menuFrame2.getContentPane().setBackground(Color.cyan);
         menuFrame2.setVisible(false);
-        menuFrame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        menuFrame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         /*************/
 
@@ -164,7 +172,7 @@ public class MainGame {
         window.setSize(1280,900);
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setVisible(false);
         walLines = new int[window.getWidth()][4];
@@ -172,7 +180,7 @@ public class MainGame {
         newGame();
     }
 
-    public static void newGame() throws FileNotFoundException {
+    private static void newGame() throws FileNotFoundException {
         readMap();
 
         int count = 0;
@@ -383,8 +391,10 @@ public class MainGame {
     public static class World extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+
             for(int x = 0;x<walLines.length;x++){
 //                for(int y = 0;y<2;y++){
+                //g.drawImage(dbImage, 0, 0, getWidth(), getHeight(), this);
                 if(walLines[x][3]==1){
                     g.setColor(new Color(64,64,64));
                 }else{
@@ -412,9 +422,9 @@ public class MainGame {
 //                }
             }
             g.setColor(Color.RED);
-            g.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+            g.setFont(new Font("Georgia", Font.BOLD, 30));
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
-            g.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 20));
+            g.setFont(new Font("Georgia", Font.CENTER_BASELINE, 20));
             if((int)plantRemainTime > 0){
                 g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
             }
@@ -525,10 +535,9 @@ public class MainGame {
     /**editGameScreen()
      * This method  is for reconstructing the game playing screen after the user lost
      **/
-    public static void endGameScreen(){
+    private static void endGameScreen(){
 
         //Save the score
-        int totalScore;
         if(win){
             totalScore = (int)(1.5*deltaSecond(startTime));
         }else{
@@ -543,31 +552,41 @@ public class MainGame {
         contentPane = new JPanel(new BorderLayout());
 
         //Create items
-        ImageIcon image = new ImageIcon("backGround.jpg");
         JButton endButton = new JButton("Check your Score");
         endButton.setBackground(Color.CYAN);
         endButton.addActionListener(new endListener());
 
         //Add items to JPanel
 
-        JPanel endGamePanel = new JPanel(new GridLayout(3, 1));
-        endGamePanel.add(new JLabel("Game Ended"));
-        endGamePanel.add(new JLabel(name+" has survived for "+deltaSecond(startTime)+"s."));
+        //Set Default Font
+        setUIFont(new javax.swing.plaf.FontUIResource("Georgia",Font.CENTER_BASELINE,20));
+        //Set up inner JPanel
+        JPanel endGamePanel = new SpecialPanel();
+        endGamePanel.setLayout(new GridLayout(3, 1));
+        endGamePanel.add(new JLabel(" END OF THE GAME"));
+        endGamePanel.add(new JLabel(" "+playerName+" has survived for "+deltaSecond(startTime)+"s."));
         if(win){
-            endGamePanel.add(new JLabel("CONGRATS FOR SAVING THE MANKIND!"));
+            endGamePanel.add(new JLabel(" CONGRATS FOR SAVING THE MANKIND!"));
         }else{
-            endGamePanel.add(new JLabel("Unfortunately, you lost... But you can try again"));
+            endGamePanel.add(new JLabel(" Unfortunately, you lost... But you can try again"));
         }
 
-        contentPane.add(endGamePanel, BorderLayout.CENTER);
+        //Add items to outer JPanel
+        JPanel innerContentPane = new JPanel(new BorderLayout());
+        innerContentPane.setBackground(Color.YELLOW);
+        innerContentPane.add(new JLabel("   "), BorderLayout.EAST);
+        innerContentPane.add(new JLabel("   "), BorderLayout.WEST);
+        innerContentPane.add(new JLabel("   "), BorderLayout.NORTH);
+        innerContentPane.add(new JLabel("   "), BorderLayout.SOUTH);
+        innerContentPane.add(endGamePanel, BorderLayout.CENTER);
+        contentPane.add(innerContentPane, BorderLayout.CENTER);
         contentPane.add(endButton, BorderLayout.SOUTH);
 
-        //Final settings
+        //Final JFrame settings
         menuFrame3.setIconImage(icon.getImage());
         menuFrame3.setSize(600, 300);
         menuFrame3.setContentPane(contentPane);
-        menuFrame3.getContentPane().setBackground(Color.cyan);
-        menuFrame3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        menuFrame3.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setVisible(false);
         menuFrame3.setVisible(true);
         menuFrame3.setFocusable(true);
@@ -577,39 +596,44 @@ public class MainGame {
     /**endScreen()
      * This method  is for displaying leaderboard + player score.
      **/
-    public static void endScreen() {
+    private static void endScreen() {
 
         //Set up the frame work
         menuFrame3.remove(contentPane);
         contentPane = new JPanel(new BorderLayout());
 
         //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Courier", Font.CENTER_BASELINE, 16));
+        setUIFont(new javax.swing.plaf.FontUIResource("Georgia", Font.CENTER_BASELINE, 16));
 
         ArrayList<Player> players = test.sortAndGet();
         JButton returnButton = new JButton("Exit the Game");
         returnButton.setBackground(Color.cyan);
         returnButton.addActionListener(new returnListener());
-        JLabel title = new JLabel("You have made a score of "+players.get(players.size()-1).getScore());
-        title.setFont(new Font("Comic Sans MS", Font.CENTER_BASELINE, 19));
+        JLabel title = new JLabel("   You have made a score of "+totalScore);
+        title.setFont(new Font("Georgia", Font.CENTER_BASELINE, 19));
 
         //Add items to sub jpanel
-        JPanel board = new JPanel(new GridLayout(players.size()+1, 1));
+        JPanel board = new SpecialPanel();
+        board.setLayout(new GridLayout(11, 1, 1, 10));
         board.add(new JLabel("Leaderboard: "));
-        for(int i = 0; i < players.size(); i++){
+        for(int i = 0; i < 10; i++){
             board.add(new JLabel((i+1)+"."+players.get(i).getName()+": "+players.get(i).getScore()));
         }
 
         //Add items to JPanel
-
-        contentPane.add(title, BorderLayout.NORTH);
-        contentPane.add(board, BorderLayout.CENTER);
+        JPanel innerContentPane = new JPanel(new BorderLayout());
+        innerContentPane.setBackground(Color.CYAN);
+        innerContentPane.add(title, BorderLayout.NORTH);
+        innerContentPane.add(board, BorderLayout.CENTER);
+        innerContentPane.add(new JLabel("    "), BorderLayout.WEST);
+        innerContentPane.add(new JLabel("    "), BorderLayout.SOUTH);
+        innerContentPane.add(new JLabel("    "), BorderLayout.EAST);
+        contentPane.add(innerContentPane, BorderLayout.CENTER);
         contentPane.add(returnButton, BorderLayout.SOUTH);
-        contentPane.add(new JLabel("    "), BorderLayout.WEST);
-        contentPane.add(new JLabel("    "), BorderLayout.EAST);
+
 
         //Final settings
-        menuFrame3.setSize(300, 500);
+        menuFrame3.setSize(375, 500);
         menuFrame3.setContentPane(contentPane);
         menuFrame3.getContentPane().setBackground(Color.cyan);
         menuFrame3.setVisible(true);
@@ -674,7 +698,7 @@ public class MainGame {
      * setUIFont
      * set the font for java swing
      */
-    public static void setUIFont (javax.swing.plaf.FontUIResource f){
+    private static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
@@ -684,4 +708,10 @@ public class MainGame {
         }
     }
 
+    /******************PART D: BACKGROUND IMAGES FOR PANELS******/
+    static class SpecialPanel extends JPanel {
+        public void paintComponent(Graphics g) {
+            g.drawImage(dbImage, 0, 0, this);
+        }
+    }
 }

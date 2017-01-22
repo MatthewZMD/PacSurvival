@@ -556,8 +556,6 @@ public class MainGame {
         endButton.setBackground(Color.CYAN);
         endButton.addActionListener(new endListener());
 
-        //Add items to JPanel
-
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Georgia",Font.CENTER_BASELINE,20));
         //Set up inner JPanel

@@ -15,8 +15,8 @@ import java.util.Enumeration;
 import java.util.Scanner;
 
 public class MainGame {
-    public static int[][] map;
-    public static int[][]walLines;
+    //Declare Variables
+    public static int[][] map, walLines;
 
     public static JFrame window = new JFrame("Survival");
     public static World world = new World();
@@ -27,7 +27,7 @@ public class MainGame {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 0.1, plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 5, plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
     public static boolean win = false;
@@ -35,10 +35,8 @@ public class MainGame {
     public static ArrayList<Organism> organisms = new ArrayList<Organism>();
     private static Leaderboard test;
 
-    //Declare Variables
     private static JButton startButton;
     private static JPanel contentPane;
-    //public static SpecialPanel contentPane4;
     private static JFrame menuFrame, menuFrame2, menuFrame3;
     private static String playerName;
     private static JTextField name;
@@ -85,6 +83,10 @@ public class MainGame {
         JPanel settingButtonPanel = new JPanel(new FlowLayout());
         JLabel instruction = new JLabel("THE BACKSTORY:");
         instruction.setFont(new Font("Georgia", Font.BOLD, 16));
+        JLabel title = new JLabel("  SURVIVAL");
+        title.setFont(new Font("Georgia", Font.BOLD, 25));
+
+        //Create Subpanel
         settingButtonPanel.add(instruction);
         settingButtonPanel.add(new JLabel("Jan. 19th, 2038. 03:14:07"));
         settingButtonPanel.add(new JLabel("You are summoned to the world."));
@@ -96,8 +98,6 @@ public class MainGame {
         settingButtonPanel.add(new JLabel("We've great expectations for you."));
         settingButtonPanel.add(new JLabel("Good luck!"));
         settingButtonPanel.setBackground(Color.yellow);
-        JLabel title = new JLabel("   SURVIVAL");
-        title.setFont(new Font("Georgia", Font.BOLD, 40));
 
         //Add items to JPanel
         contentPane.add(title);
@@ -334,6 +334,8 @@ public class MainGame {
             alive = remainTime>0; //End when remain time <= 0
             win = map[(int) player.getX()][(int)player.getY()]==8;
         }
+        //After jumping out of loop, create new JFrame and stop theme music
+        gameMusic.close();
         endGameScreen();
     }
 
@@ -563,6 +565,7 @@ public class MainGame {
         endGamePanel.setLayout(new GridLayout(3, 1));
         endGamePanel.add(new JLabel(" END OF THE GAME"));
         endGamePanel.add(new JLabel(" "+playerName+" has survived for "+deltaSecond(startTime)+"s."));
+        //Add JLabel depending on players' scenario
         if(win){
             endGamePanel.add(new JLabel(" CONGRATS FOR SAVING THE MANKIND!"));
         }else{
@@ -603,6 +606,7 @@ public class MainGame {
         //Set Default Font
         setUIFont(new javax.swing.plaf.FontUIResource("Georgia", Font.CENTER_BASELINE, 16));
 
+        //Make JPanel items
         ArrayList<Player> players = test.sortAndGet();
         JButton returnButton = new JButton("Exit the Game");
         returnButton.setBackground(Color.cyan);
@@ -629,7 +633,6 @@ public class MainGame {
         contentPane.add(innerContentPane, BorderLayout.CENTER);
         contentPane.add(returnButton, BorderLayout.SOUTH);
 
-
         //Final settings
         menuFrame3.setSize(375, 500);
         menuFrame3.setContentPane(contentPane);
@@ -647,6 +650,7 @@ public class MainGame {
      */
     static class startListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            //Swap jframes
             menuFrame.setVisible(false);
             menuFrame2.setVisible(true);
             menuFrame2.setFocusable(true);
@@ -655,11 +659,11 @@ public class MainGame {
 
     /**
      * gameListener
-     * switches the JFrame to game frame in MainGame.java
+     * switches the JFrame to game frame
      */
     static class gameListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            menuFrame2.setVisible(false);
+            menuFrame2.dispose();
             //Get the name of the player
             playerName = name.getText();
             //Temporarily open a new game menuFrame, run the game.
@@ -673,21 +677,22 @@ public class MainGame {
 
     /**
      * endListener
-     * remakes the JFrame
+     * remakes the JFrame by directing to a new method
      */
     static class endListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            window.dispose();
             endScreen();
         }
     }
 
     /**
      * returnListener
-     * closes the JFrame
+     * closes the JFrame and ends the game process
      */
     static class returnListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            menuFrame3.setVisible(false);
+            menuFrame3.dispose();
         }
     }
 

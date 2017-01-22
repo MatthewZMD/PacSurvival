@@ -8,9 +8,10 @@ abstract public class Creature extends Organism{
   private double dirX, dirY;
 
   public Creature(double x, double y, double dirX, double dirY){
-    super(x, y);
-    setDirX(dirX);
-    setDirY(dirY);
+      //assign variable values
+      super(x, y);
+      setDirX(dirX);
+      setDirY(dirY);
   }
 
   public double getDirX() {

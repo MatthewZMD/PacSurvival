@@ -1,5 +1,7 @@
-import sun.applet.Main;
-
+/* [CheckCollision.java]
+ * A Small program for leaderboard information
+ * @author Matthew & Jim
+ */
 public class CheckDeath implements Runnable{
 
   public synchronized void run(){

@@ -1,3 +1,8 @@
+/* [CheckCollision.java]
+ * A Small program for leaderboard information
+ * @author Matthew & Jim
+ */
+
 public class CheckCollision implements Runnable{
 
   public static double collideTime, attackTime, walkerDiedTime, plantReceivedTime;

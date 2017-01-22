@@ -1,4 +1,7 @@
-import sun.applet.Main;
+/* [Walker.java]
+ * A Small program for leaderboard information
+ * @author Matthew & Jim
+ */
 
 public class WalkerAI implements Runnable{
   public void run() {

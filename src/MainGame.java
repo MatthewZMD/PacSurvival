@@ -127,7 +127,7 @@ public class MainGame {
         startButton2.setBackground(Color.CYAN);
         startButton2.setFont(new Font("Georgia", Font.CENTER_BASELINE, 16));
         startButton2.addActionListener(new gameListener());
-        JLabel instruction1 = new JLabel("         main objective is to find an exit in a limited time.");
+        JLabel instruction1 = new JLabel("        The main objective is to find an exit in a limited time.");
         JLabel instruction2 = new JLabel("  You'll see some blue-coloured blocks called Walkers");
         JLabel instruction3 = new JLabel("  Once you make contact with them, ");
         JLabel instruction4 = new JLabel("  your remaining time in maze will decrease, so be careful.");
@@ -139,7 +139,6 @@ public class MainGame {
         JLabel instruction10 = new JLabel("  However there are Fake Plants in the maze that bring no");
         JLabel instruction11 = new JLabel("  benefits. They're only intended to mislead you to an unknown destination.");
         JLabel title2 = new JLabel("            Insert your name to begin: ");
-        title2.setFont(new Font("Georgia", Font.CENTER_BASELINE, 12));
         name = new JTextField(100);
 
         //Add items to JPanel

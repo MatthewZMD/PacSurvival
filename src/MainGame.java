@@ -711,6 +711,7 @@ public class MainGame {
     /******************PART D: BACKGROUND IMAGES FOR PANELS******/
     static class SpecialPanel extends JPanel {
         public void paintComponent(Graphics g) {
+            //Draw an image for the JPanel from an image file
             g.drawImage(dbImage, 0, 0, this);
         }
     }

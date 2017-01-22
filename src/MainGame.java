@@ -32,7 +32,7 @@ public class MainGame {
 
     public static boolean win = false;
 
-    public static ArrayList<Organism> organisms = new ArrayList<Organism>();
+    public static ArrayList<Organism> organisms = new ArrayList<>();
     private static Leaderboard test;
 
     private static JButton startButton;
@@ -52,6 +52,7 @@ public class MainGame {
     //Below starts the methods (screens)
     //Main method
     public static void main(String[] args) throws Exception {
+        /****************Frame 1******/
         menuFrame = new JFrame("Survival");
 
         //Import music into the game
@@ -84,7 +85,7 @@ public class MainGame {
         JLabel instruction = new JLabel("THE BACKSTORY:");
         instruction.setFont(new Font("Georgia", Font.BOLD, 16));
         JLabel title = new JLabel("  SURVIVAL");
-        title.setFont(new Font("Georgia", Font.BOLD, 25));
+        title.setFont(new Font("Georgia", Font.BOLD, 35));
 
         //Create Subpanel
         settingButtonPanel.add(instruction);
@@ -114,7 +115,7 @@ public class MainGame {
         menuFrame.setVisible(true);
         menuFrame.setFocusable(true);
 
-        //********************/
+        //**********Frame 2*****/
 
         menuFrame2 = new JFrame("Survival");
 
@@ -141,7 +142,7 @@ public class MainGame {
         JLabel title2 = new JLabel("            Insert your name to begin: ");
         name = new JTextField(100);
 
-        //Add items to JPanel
+        //Add items to JPanels
         contentPane2.add(instruction1);
         contentPane2.add(instruction2);
         contentPane2.add(instruction3);
@@ -157,7 +158,7 @@ public class MainGame {
         contentPane2.add(name);
         contentPane2.add(startButton2);
 
-        //Final settings
+        //Final menuFrame2 settings
         menuFrame2.setSize(600,500);
         menuFrame2.setIconImage(icon.getImage());
         menuFrame2.setContentPane(contentPane2);
@@ -165,8 +166,7 @@ public class MainGame {
         menuFrame2.setVisible(false);
         menuFrame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        /*************/
-
+        /***Initial Game Window Settings*******/
         window.setIconImage(icon.getImage());
         window.setSize(1280,900);
         window.getContentPane().add(world);
@@ -176,6 +176,7 @@ public class MainGame {
         window.setVisible(false);
         walLines = new int[window.getWidth()][4];
 
+        //Direct to beginning the new game
         newGame();
     }
 

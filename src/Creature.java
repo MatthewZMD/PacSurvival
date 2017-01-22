@@ -5,29 +5,29 @@
 
 abstract public class Creature extends Organism{
 
-	private double dirX, dirY;
-	
-	public Creature(double x, double y, double dirX, double dirY){
-		super(x, y);
-		setDirX(dirX);
-	    setDirY(dirY);
-	}
-	
-	public double getDirX() {
-        return dirX;
-    }
+  private double dirX, dirY;
 
-    public void setDirX(double dirX) {
-        this.dirX = dirX;
-    }
+  public Creature(double x, double y, double dirX, double dirY){
+    super(x, y);
+    setDirX(dirX);
+    setDirY(dirY);
+  }
 
-    public double getDirY() {
-        return dirY;
-    }
+  public double getDirX() {
+    return dirX;
+  }
 
-    public void setDirY(double dirY) {
-        this.dirY = dirY;
-    }
+  public void setDirX(double dirX) {
+    this.dirX = dirX;
+  }
 
-	
+  public double getDirY() {
+    return dirY;
+  }
+
+  public void setDirY(double dirY) {
+    this.dirY = dirY;
+  }
+
+
 }

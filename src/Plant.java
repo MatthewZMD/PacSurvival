@@ -21,18 +21,38 @@ public class Plant extends Organism{
     setCountTime(System.nanoTime());
   }
 
+  /**
+   * getHealth
+   * gets the value of the plant's health
+   * @return health
+   */
   public int getHealth() {
     return health;
   }
 
+  /**
+   * updateHealth
+   * adds health into the plant
+   * @param addHealth
+   */
   public void updateHealth(double addHealth){
     this.health+=addHealth;
   }
 
+  /**
+   * getCountTime()
+   * returns a time counted
+   * @return long
+   */
   public long getCountTime() {
     return countTime;
   }
 
+  /**
+   *setCountTime
+   * sets a time counted
+   * @param countTime
+   */
   public void setCountTime(long countTime) {
     this.countTime = countTime;
   }

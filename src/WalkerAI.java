@@ -41,13 +41,13 @@ public class WalkerAI implements Runnable{
           walkerY = (int) MainGame.organisms.get(i).getY();
           MainGame.map[walkerY][walkerX] = MainGame.map[walkerY][walkerX] == 3 ? 4:2;
 
-          //Decrease health based on case scenario
+          //Decrease health based on counted time
           if(MainGame.deltaSecond(((Walker) MainGame.organisms.get(i)).getCountTime())==1){
             ((Walker) MainGame.organisms.get(i)).updateHealth(-1);
             ((Walker) MainGame.organisms.get(i)).setCountTime(System.nanoTime());
           }
 
-          //Decrease health based on case scenario
+          //Decrease health based on counted time
         }else if(MainGame.organisms.get(i) instanceof Plant){
           if(MainGame.deltaSecond(((Plant) MainGame.organisms.get(i)).getCountTime())==1){
             ((Plant) MainGame.organisms.get(i)).updateHealth(-1);

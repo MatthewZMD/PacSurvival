@@ -235,6 +235,7 @@ public class MainGame {
                     //If plant buff remaining time > 0, deduct 0.5
                     plantRemainTime-=0.5;
                 }
+
                 //If spawning time > 0, deduct 0.5
                 if(spawnTime>0){
                     spawnTime-=0.5;

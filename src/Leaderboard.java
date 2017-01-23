@@ -17,8 +17,9 @@ public class Leaderboard {
 	
 	/**
 	* default constructor Leaderboard
-	* sets the arraylist and adds a new item
-	* @param name, score
+	* sets the arraylist and adds the current player into it
+	* @param name the String name of current player
+	 * @param score the int score of the current player
 	*/
 	Leaderboard(String name, int score){
 		
@@ -50,6 +51,7 @@ public class Leaderboard {
 			//Add the new player at the end of arraylist
 			players.add(new Player(name,0,0,0,0));
 			players.get(i).setScore(score);
+			//Sort the players based on what scores they got
             players = sortAndGet();
 
 			//Reprint the list storage file with one new player in the arraylist
@@ -57,7 +59,6 @@ public class Leaderboard {
 			for(int j = 0; j < 10; j++){
 				reWrite.println(players.get(j).getName()+","+players.get(j).getScore());
 			}
-			reWrite.println(name+","+score);
 			reWrite.close();
 			
 		//Report any exception to console
@@ -69,7 +70,7 @@ public class Leaderboard {
 	/**
 	* sortAndGet
 	* sort the private class variable ArrayList players
-	* @return ArrayList<Protagonist> players
+	* @return ArrayList<Protagonist> players, stores all past players with top 10 highest scores
 	*/
 	public ArrayList<Player> sortAndGet(){
 		
@@ -88,7 +89,7 @@ public class Leaderboard {
 			players.set(max, placeholder);
 		}
 		
-		//return list
+		//return list of players sorted
 		return players;
 	}
 	

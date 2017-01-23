@@ -16,7 +16,7 @@ public class Leaderboard {
 	private ArrayList<Player> players = new ArrayList<>();
 	
 	/**
-	* default constructor
+	* default constructor Leaderboard
 	* sets the arraylist and adds a new item
 	* @param name, score
 	*/

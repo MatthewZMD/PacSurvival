@@ -4,6 +4,10 @@
  */
 
 public class WalkerAI implements Runnable{
+
+  /** run
+   * moves the walker position
+   */
   public void run() {
     while(true){
       //Run for all walkers at once

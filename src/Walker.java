@@ -9,6 +9,14 @@ public class Walker extends Creature{
   private int health;
   private long countTime;
 
+    /**
+     * default constructor Walker
+     * @param x
+     * @param y
+     * @param dirX
+     * @param dirY
+     * @param health
+     */
   Walker(double x, double y, double dirX, double dirY, double health) {
     super(x, y, dirX, dirY);
     updateHealth(health);
@@ -25,11 +33,8 @@ public class Walker extends Creature{
     this.health+=addHealth;
   }
 
-  /**
-   * getHealth
-   * get class variable health
-   * @return  int health class variable
-   */
+  //******************Getters and setters**********/
+
   public double getHealth(){
     return this.health;
   }

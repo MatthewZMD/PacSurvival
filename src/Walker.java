@@ -21,10 +21,6 @@ public class Walker extends Creature{
     this.gender = gender;
   }
 
-  public int getGender(){
-    return this.gender;
-  }
-
   /**
    * updateHealth
    * get class variable health

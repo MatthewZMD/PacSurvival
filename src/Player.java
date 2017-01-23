@@ -21,6 +21,8 @@ public class Player extends Creature{
     this.score = 0;
   }
 
+  /******************Getters and setters**********/
+
   public void setScore(int score){
     this.score = score;
   }

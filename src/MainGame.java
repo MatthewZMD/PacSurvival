@@ -1,3 +1,4 @@
+//Import from java libraries
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -14,10 +15,15 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
 
+/*[MainGame.java]
+ *Runs the game, GUI panes and Displays scores
+ * @author jim and matthew
+ */
 public class MainGame {
     //Declare Variables
     public static int[][] map, walLines;
 
+    //Create game frame/panel
     public static JFrame window = new JFrame("Survival");
     public static World world = new World();
 
@@ -27,14 +33,18 @@ public class MainGame {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
+    //Create class time variables
     public static double remainTime = 60 * 0.2, plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
+    //create winning boolean
     public static boolean win = false;
 
+    //Declare the storages for organisms
     public static ArrayList<Organism> organisms = new ArrayList<>();
     private static Leaderboard test;
 
+    //Declare variables for instruction JFrames
     private static JButton startButton;
     private static JPanel contentPane;
     private static JFrame menuFrame, menuFrame2, menuFrame3;
@@ -42,15 +52,19 @@ public class MainGame {
     private static JTextField name;
     private static int totalScore;
 
+    //Declare images that will be used throughout the game
     private static Image dbImage;
     private static ImageIcon icon = new ImageIcon("gameIcon.png");
 
+    //Declare booleans that will be used for detecting keyboard presses
     public static boolean start = false,left,right,up,down;
 
+    //Declare Clip music that will be played in the game
     public static Clip gameMusic;
 
-    //Below starts the methods (screens)
-    //Main method
+    /** Main method
+     * Starts the game panels
+     */
     public static void main(String[] args) throws Exception {
         /****************Frame 1******/
         menuFrame = new JFrame("Survival");
@@ -180,9 +194,15 @@ public class MainGame {
         newGame();
     }
 
+    /**newGame
+     * Runs the game in a loop and begins the game threads
+     * @throws FileNotFoundException
+     */
     private static void newGame() throws FileNotFoundException {
+        //load map
         readMap();
 
+        //Find number of empty spaces
         int count = 0;
         for(int i = 0;i<map.length;i++){
             for(int j = 0;j<map[i].length;j++){
@@ -191,9 +211,11 @@ public class MainGame {
         }
         System.out.println(count);
 
+        //initiate map variables
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
 
+        //Begin threads that constantly change the game
         Thread checkDeath = new Thread(new CheckDeath());
         checkDeath.start();
         Thread checkCollision = new Thread(new CheckCollision());
@@ -201,6 +223,7 @@ public class MainGame {
         Thread walkerAI = new Thread(new WalkerAI());
         walkerAI.start();
 
+        //Declare other local variables
         long oldTime = 0;
         boolean alive = true;
 
@@ -298,6 +321,7 @@ public class MainGame {
             updateMovement();
             window.repaint();
 
+            //Calculate time from certain events and instants
             if(start&&oldTime==0){
                 startTime = System.nanoTime();
                 oldTime = System.nanoTime();
@@ -334,7 +358,7 @@ public class MainGame {
             alive = remainTime>0; //End when remain time <= 0
             win = map[(int) player.getX()][(int)player.getY()]==8;
         }
-        //After jumping out of loop, create new JFrame and stop theme music
+        //After game end, create new JFrame and stop theme music
         gameMusic.close();
         endGameScreen();
     }
@@ -383,6 +407,11 @@ public class MainGame {
         }
     }
 
+    /**deltaSeconds
+     *calculate time elapsed from a given starting point
+     * @param long oldTime (reference starting point)
+     * @return double time difference (deltaT)
+     */
     public static double deltaSecond(long oldTime){
         long currentTime = System.nanoTime();
         double elapsed = (currentTime - oldTime) /1000000000.0;
@@ -390,13 +419,16 @@ public class MainGame {
         return round/10;
     }
 
+    /** World
+     * this extended class draws 3D graphics on the game frame
+     */
     public static class World extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             for(int x = 0;x<walLines.length;x++){
 //                for(int y = 0;y<2;y++){
                 //g.drawImage(dbImage, 0, 0, getWidth(), getHeight(), this);
+                //Draw walls
                 if(walLines[x][3]==1){
                     g.setColor(new Color(64,64,64));
                 }else{
@@ -423,6 +455,7 @@ public class MainGame {
                 }
 //                }
             }
+            //Change settings and display JLabels, depending on cases
             g.setColor(Color.RED);
             g.setFont(new Font("Georgia", Font.BOLD, 30));
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
@@ -446,6 +479,9 @@ public class MainGame {
         }
     }
 
+    /**keyListener
+     * change variables as it detects key pressing
+     */
     public static class keyListener implements KeyListener {
         int factor = 10;
         @Override
@@ -469,6 +505,7 @@ public class MainGame {
         @Override
         public void keyTyped(KeyEvent e) {
         }
+        //Stop moving once key is released
         @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
@@ -489,6 +526,9 @@ public class MainGame {
 
     }
 
+    /**updateMovement()
+     * updates the player movement in speed, position and direction
+     */
     public static void updateMovement(){
         if(right){
             //both camera direction and camera plane are rotated
@@ -699,7 +739,7 @@ public class MainGame {
     /******************PART C: MISCELLALIOUS METHOD**************/
     /**
      * setUIFont
-     * set the font for java swing
+     * set the default font for java GUI labels
      */
     private static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();

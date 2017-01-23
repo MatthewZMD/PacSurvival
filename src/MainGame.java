@@ -467,24 +467,30 @@ public class MainGame {
                 }
 //                }
             }
-            //Set color to red
+            //Set color to red and change font
             g.setColor(Color.RED);
             g.setFont(new Font("Georgia", Font.BOLD, 30));
+            //Display remaining life
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
             g.setFont(new Font("Georgia", Font.CENTER_BASELINE, 20));
             if((int)plantRemainTime > 0){
+                //Display remaining buff if >0
                 g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
             }
             if(CheckCollision.collideTime > 0){
+                //Display warning that a walker attacked you
                 g.drawString("A walker attacked you.", 0, 80);
             }
             if(CheckCollision.attackTime > 0){
+                //Display warning that you attacked a walker
                 g.drawString("You attacked a walker.", 0, 100);
             }
             if(CheckCollision.walkerDiedTime > 0){
-                g.drawString("A walker died from your hands!", 0, 120);
+                //Prompt that a walker died
+                g.drawString("A walker died!", 0, 120);
             }
             if(CheckCollision.plantReceivedTime > 0){
+                //Prompt you ate a plant
                 g.drawString("You ate a plant!", 0, 140);
             }
 

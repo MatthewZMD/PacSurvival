@@ -8,18 +8,23 @@ public class CheckCollision implements Runnable{
   public static double collideTime, attackTime, walkerDiedTime, plantReceivedTime, fakePlantReceivedTime;
 
   public synchronized void run() {
-    while(true){
+      //Runs continuously
+      while(true){
       //Check if collision happens with fake plants
       if(MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]==3){
           for(int i = 0; i < MainGame.organisms.size(); i++){
               Organism o = MainGame.organisms.get(i);
-              if(i==MainGame.organisms.size()-1){
-//                  fakePlantReceivedTime=3;
+              if((int) MainGame.player.getX()==o.getY()&&(int) MainGame.player.getY()==o.getX()){
+                  i = MainGame.organisms.size();
+              }else if(i==MainGame.organisms.size()-1){
+                  fakePlantReceivedTime=3;
+                  //Fake plant is dead
                 System.out.println("Fake plant");
                   MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]=0;
               }
           }
       }
+      //Loop through the organisms arraylist
       for(int i = 0; i < MainGame.organisms.size(); i++){
         Organism o = MainGame.organisms.get(i);
         if (o!=null&&Math.floor(MainGame.player.getY()) >= o.getX()-0.5 && Math.floor(MainGame.player.getY()) <= o.getX()+0.5 && Math.floor(MainGame.player.getX()) >= o.getY()-0.5 && Math.floor(MainGame.player.getX()) <= o.getY()+0.5) {
@@ -27,6 +32,7 @@ public class CheckCollision implements Runnable{
           if (o instanceof Walker) {
             if (MainGame.plantRemainTime > 0) {
               System.out.print("You attacked the Walker at " + o.getX() + "," + o.getY() + "! ");
+                //Deduct walker's health
               ((Walker) o).updateHealth(-100);
               System.out.println("Walker remaining health: "+((Walker) o).getHealth());
               attackTime=3;

@@ -126,6 +126,7 @@ public class MainGame {
         menuFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         menuFrame.setVisible(true);
         menuFrame.setFocusable(true);
+        menuFrame.setResizable(false);
 
         //**********Frame 2*****/
         menuFrame2 = new JFrame("Survival");
@@ -143,12 +144,12 @@ public class MainGame {
         JLabel instruction2 = new JLabel("  You'll see some blue-coloured blocks called Walkers");
         JLabel instruction3 = new JLabel("  Once you make contact with them, ");
         JLabel instruction4 = new JLabel("  your remaining time in maze will decrease, so be careful.");
-        JLabel instruction5 = new JLabel("  Fortunately, some green plant objects exist here.");
+        JLabel instruction5 = new JLabel("  Fortunately, some green plant blocks exist here.");
         JLabel instruction6 = new JLabel("  Once you are in contact with the Plants, your life-time increases.");
         JLabel instruction7 = new JLabel("  And you will receive a Plant Buff for a limited amount of time.");
         JLabel instruction8 = new JLabel("  The Plant Buff enables you to attack the Walkers instead of ");
         JLabel instruction9 = new JLabel("  the Walkers damaging you while you are in contact with them.");
-        JLabel instruction10 = new JLabel("  However if a Walker walks onto a Plant, they combine and form Yellow,");
+        JLabel instruction10 = new JLabel("  However if a Walker walks onto a Plant, they collide and forms Yellow Block,");
         JLabel instruction11 = new JLabel("  then the Plant becomes a Fake Plant which brings no benefit to you.");
         JLabel title2 = new JLabel("        Please enter your name to begin: ");
         name = new JTextField(100);
@@ -170,11 +171,12 @@ public class MainGame {
         contentPane2.add(startButton2);
 
         //Final menuFrame2 settings
-        menuFrame2.setSize(600,500);
+        menuFrame2.setSize(650,500);
         menuFrame2.setIconImage(icon.getImage());
         menuFrame2.setContentPane(contentPane2);
         menuFrame2.getContentPane().setBackground(Color.cyan);
         menuFrame2.setVisible(false);
+        menuFrame2.setResizable(false);
         menuFrame2.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         /***Initial Game Window Settings*******/
@@ -510,7 +512,6 @@ public class MainGame {
             }
             if(CheckCollision.fakePlantReceivedTime > 0){
                 //Prompt you ate a fake plant
-                g.setColor(Color.GREEN);
                 g.drawString("You ate a fake plant!", 0, 160);
             }
 
@@ -669,6 +670,7 @@ public class MainGame {
         window.setVisible(false);
         menuFrame3.setVisible(true);
         menuFrame3.setFocusable(true);
+        menuFrame3.setResizable(false);
 
     }
 

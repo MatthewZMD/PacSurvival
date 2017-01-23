@@ -735,15 +735,17 @@ public class MainGame {
      */
     static class gameListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            menuFrame2.dispose();
-            //Get the name of the player
-            playerName = name.getText();
-            //Temporarily open a new game menuFrame, run the game.
-            start = true;
-            window.setFocusable(true);
-            window.setVisible(true);
-            gameMusic.start();
-            gameMusic.loop(10000);
+            if(!name.getText().equals("")){
+                menuFrame2.dispose();
+                //Get the name of the player
+                playerName = name.getText();
+                //Temporarily open a new game menuFrame, run the game.
+                start = true;
+                window.setFocusable(true);
+                window.setVisible(true);
+                gameMusic.start();
+                gameMusic.loop(10000);
+            }
         }
     }
 

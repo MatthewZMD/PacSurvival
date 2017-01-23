@@ -17,7 +17,7 @@ public class Plant extends Organism{
    */
   Plant(int x, int y,int health){
     super(x, y);
-    MainGame.map[(int) y][(int) x] = MainGame.map[(int) y][(int) x]==2 ? 4:3;
+    MainGame.map[y][x] = MainGame.map[y][x]==2 ? 4:3;
     setCountTime(System.nanoTime());
   }
 

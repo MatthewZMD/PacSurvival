@@ -14,7 +14,8 @@ public class CheckCollision implements Runnable{
           for(int i = 0; i < MainGame.organisms.size(); i++){
               Organism o = MainGame.organisms.get(i);
               if(i==MainGame.organisms.size()-1){
-                  fakePlantReceivedTime=3;
+//                  fakePlantReceivedTime=3;
+                System.out.println("Fake plant");
                   MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]=0;
               }
           }

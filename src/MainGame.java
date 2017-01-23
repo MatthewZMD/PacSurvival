@@ -10,7 +10,7 @@ import java.util.Enumeration;
 import java.util.Scanner;
 
 /*[MainGame.java]
- *Runs the game, GUI panes and Displays scores
+ * Runs the game, GUI panes and Displays scores
  * @author jim and matthew
  */
 public class MainGame {
@@ -480,28 +480,35 @@ public class MainGame {
                 }
 //                }
             }
-            //Set color to red
+            //Set color to red and change font
             g.setColor(Color.RED);
             //Create settings for notification strings
             g.setFont(new Font("Georgia", Font.BOLD, 30));
+            //Display remaining life
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
             g.setFont(new Font("Georgia", Font.CENTER_BASELINE, 20));
             if((int)plantRemainTime > 0){
+                //Display remaining buff if >0
                 g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
             }
             if(CheckCollision.collideTime > 0){
+                //Display warning that a walker attacked you
                 g.drawString("A walker attacked you.", 0, 80);
             }
             if(CheckCollision.attackTime > 0){
+                //Display warning that you attacked a walker
                 g.drawString("You attacked a walker.", 0, 100);
             }
             if(CheckCollision.walkerDiedTime > 0){
-                g.drawString("A walker died from your hands!", 0, 120);
+                //Prompt that a walker died
+                g.drawString("A walker died!", 0, 120);
             }
             if(CheckCollision.plantReceivedTime > 0){
+                //Prompt you ate a plant
                 g.drawString("You ate a plant!", 0, 140);
             }
             if(CheckCollision.fakePlantReceivedTime > 0){
+                //Prompt you ate a fake plant
                 g.setColor(Color.GREEN);
                 g.drawString("You ate a fake plant!", 0, 160);
             }
@@ -509,11 +516,10 @@ public class MainGame {
         }
     }
 
-    /**keyListener
+    /**keyListener()
      * change variables as it detects key pressing
      */
     public static class keyListener implements KeyListener {
-        int factor = 10;
         @Override
         public void keyPressed(KeyEvent e) {
             //Get the key pressed
@@ -551,7 +557,6 @@ public class MainGame {
             if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
                 down = false;
             }
-//            System.out.println(false);
         }
 
     }
@@ -561,41 +566,40 @@ public class MainGame {
      */
     public static void updateMovement(){
         if(right){
-            //both camera direction and camera plane are rotated
+            //camera direction and camera plane are rotated to rotate right
             double oldDirX = player.getDirX();
             player.setDirX(player.getDirX() * Math.cos(-rotSpeed) - player.getDirY() * Math.sin(-rotSpeed));
             player.setDirY(oldDirX * Math.sin(-rotSpeed) + player.getDirY() * Math.cos(-rotSpeed));
             double oldPlaneX = planeX;
             planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
             planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
-//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
         }
         if(left){
+            //camera direction and camera plane are rotated to rotate left
             double oldDirX = player.getDirX();
             player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
             player.setDirY(oldDirX * Math.sin(rotSpeed) + player.getDirY() * Math.cos(rotSpeed));
             double oldPlaneX = planeX;
             planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
             planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
-//                System.out.println("Direction: "+player.getDirX()+","+player.getDirY());
         }
         if(up){
+            //Move player forward
             if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
                 player.setX(player.getX()+(player.getDirX()*moveSpeed));
             }
             if(map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] != 1){
                 player.setY(player.getY()+(player.getDirY()*moveSpeed));
             }
-//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
         }
         if(down){
+            //Move player backwards
             if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
                 player.setX(player.getX()-(player.getDirX()*moveSpeed));
             }
             if(map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] != 1){
                 player.setY(player.getY()-(player.getDirY()*moveSpeed));
             }
-//                System.out.println("Coordinates: "+player.getX()+","+player.getY());
         }
     }
 

@@ -250,8 +250,7 @@ public class MainGame {
                     spawnTime = 60; //Set spawn time to 60s
                 }
 
-                //TODO Jim add comments
-                //Add c
+                //Delete time once event occured
                 if(CheckCollision.attackTime > 0){
                     CheckCollision.attackTime-= 0.5;
                 }
@@ -263,7 +262,8 @@ public class MainGame {
                 }
                 if(CheckCollision.plantReceivedTime > 0){
                     CheckCollision.plantReceivedTime-= 0.5;
-                }if(CheckCollision.fakePlantReceivedTime > 0){
+                }
+                if(CheckCollision.fakePlantReceivedTime > 0){
                     CheckCollision.fakePlantReceivedTime-= 0.5;
                 }
                 //Set oldTime to current time
@@ -481,6 +481,7 @@ public class MainGame {
             }
             //Set color to red and change font
             g.setColor(Color.RED);
+            //Create settings for notification strings
             g.setFont(new Font("Georgia", Font.BOLD, 30));
             //Display remaining life
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
@@ -504,6 +505,10 @@ public class MainGame {
             if(CheckCollision.plantReceivedTime > 0){
                 //Prompt you ate a plant
                 g.drawString("You ate a plant!", 0, 140);
+            }
+            if(CheckCollision.fakePlantReceivedTime > 0){
+                g.setColor(Color.GREEN);
+                g.drawString("You ate a fake plant!", 0, 160);
             }
 
         }
@@ -609,6 +614,7 @@ public class MainGame {
      **/
     private static void endGameScreen(){
 
+        //End game music
         gameMusic.close();
 
         //Save the score

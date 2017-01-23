@@ -1,5 +1,5 @@
-/* [CheckCollision.java]
- * A Small program for leaderboard information
+/* [CheckDeath.java]
+ * A Small program for walker health information
  * @author Matthew & Jim
  */
 public class CheckDeath implements Runnable{

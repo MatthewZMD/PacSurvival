@@ -6,19 +6,14 @@
 public class Walker extends Creature{
 
   //Declare Variables
-  private int gender,health;
+  private int health;
   private long countTime;
 
-  Walker(double x, double y, double dirX, double dirY, double health, int gender) {
+  Walker(double x, double y, double dirX, double dirY, double health) {
     super(x, y, dirX, dirY);
-    setGender(gender);
     updateHealth(health);
     MainGame.map[(int) y][(int) x] = MainGame.map[(int) y][(int) x]==3 ? 4:2;
     setCountTime(System.nanoTime());
-  }
-
-  public void setGender(int gender) {
-    this.gender = gender;
   }
 
   /**

@@ -9,14 +9,18 @@ public class CheckCollision implements Runnable{
 
   public synchronized void run() {
     while(true){
-//		System.out.println("Collisioning Size: "+MainGame.organisms.size());
+      if(MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]==3){
+          for(int i = 0; i < MainGame.organisms.size(); i++){
+              Organism o = MainGame.organisms.get(i);
+              if(i==MainGame.organisms.size()-1){
+                  System.out.println("Fake Plant!");
+                  //TODO Display Fake Plant
+                  MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]=0;
+              }
+          }
+      }
       for(int i = 0; i < MainGame.organisms.size(); i++){
-//				System.out.println("Checking Collision");
         Organism o = MainGame.organisms.get(i);
-
-//                try {
-//                System.out.println(o.getX()+" "+o.getY()+" "+Math.floor(MainGame.player.getY())+" "+Math.floor(MainGame.player.getX())+" "+(MainGame.player.getY() >= o.getX()-0.5)+" "+(MainGame.player.getY() <= o.getX()+0.5)+" "+(MainGame.player.getX() >= o.getY()-0.5)+" "+(MainGame.player.getX() <= o.getY()+0.5));
-
         if (o!=null&&Math.floor(MainGame.player.getY()) >= o.getX()-0.5 && Math.floor(MainGame.player.getY()) <= o.getX()+0.5 && Math.floor(MainGame.player.getX()) >= o.getY()-0.5 && Math.floor(MainGame.player.getX()) <= o.getY()+0.5) {
           if (o instanceof Walker) {
             if (MainGame.plantRemainTime > 0) {

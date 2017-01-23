@@ -1,3 +1,5 @@
+import sun.applet.Main;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,12 +13,12 @@ public class Texture {
     public int[] pixels;
     public Texture(String path){
         setPath(path);
-        pixels = new int[64 * 64];
+        pixels = new int[MainGame.texWidth * MainGame.texWidth];
     }
 
-    private void load() { //loads the image into the array
+    public void load() { //loads the image into the array
         try {
-            BufferedImage image = ImageIO.read(new File(path));  //create a buffered image at from the file at that path
+            BufferedImage image = ImageIO.read(new File(getPath()));  //create a buffered image at from the file at that path
             int w = image.getWidth();  //get the image width
             int h = image.getHeight(); //get the image height
             image.getRGB(0, 0, w, h, pixels, 0, w);  //Get the RGB value of each pixel in the image

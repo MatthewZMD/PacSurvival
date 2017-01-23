@@ -19,15 +19,16 @@ public class MainGame {
     public static int[][] map, walLines;
 
     public static JFrame window = new JFrame("Survival");
+    public static int screenWidth = 1280,screenHeight = 900,texWidth = 64,texHeight = 64;
     public static World world = new World();
 
-    //Create player object
+    //Create player object Win-4:194 Normal-65:137
     public static Player player = new Player("MT",65,137,-1,0);
 
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 0.2, plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 0.1, plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
     public static boolean win = false;
@@ -41,6 +42,8 @@ public class MainGame {
     private static String playerName;
     private static JTextField name;
     private static int totalScore;
+
+    public static Texture wall = new Texture("wall.jpg");
 
     private static Image dbImage;
     private static ImageIcon icon = new ImageIcon("gameIcon.png");
@@ -128,7 +131,7 @@ public class MainGame {
         startButton2.setBackground(Color.CYAN);
         startButton2.setFont(new Font("Georgia", Font.CENTER_BASELINE, 16));
         startButton2.addActionListener(new gameListener());
-        JLabel instruction1 = new JLabel("        The main objective is to find an exit in a limited time.");
+        JLabel instruction1 = new JLabel("  The main objective is to find an exit in a limited time.");
         JLabel instruction2 = new JLabel("  You'll see some blue-coloured blocks called Walkers");
         JLabel instruction3 = new JLabel("  Once you make contact with them, ");
         JLabel instruction4 = new JLabel("  your remaining time in maze will decrease, so be careful.");
@@ -137,9 +140,9 @@ public class MainGame {
         JLabel instruction7 = new JLabel("  And you will receive a Plant Buff for a limited amount of time.");
         JLabel instruction8 = new JLabel("  The Plant Buff enables you to attack the Walkers instead of ");
         JLabel instruction9 = new JLabel("  the Walkers damaging you while you are in contact with them.");
-        JLabel instruction10 = new JLabel("  However there are Fake Plants in the maze that bring no");
-        JLabel instruction11 = new JLabel("  benefits. They're only intended to mislead you to an unknown destination.");
-        JLabel title2 = new JLabel("            Insert your name to begin: ");
+        JLabel instruction10 = new JLabel("  However there are Fake Plants in the maze that bring no benefits.");
+        JLabel instruction11 = new JLabel("  They're only intended to mislead you to an unknown destination.");
+        JLabel title2 = new JLabel("        Please enter your name to begin: ");
         name = new JTextField(100);
 
         //Add items to JPanels
@@ -168,7 +171,7 @@ public class MainGame {
 
         /***Initial Game Window Settings*******/
         window.setIconImage(icon.getImage());
-        window.setSize(1280,900);
+        window.setSize(screenWidth,screenHeight);
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -176,23 +179,14 @@ public class MainGame {
         window.setVisible(false);
         walLines = new int[window.getWidth()][4];
 
+        wall.load();
+
         //Direct to beginning the new game
         newGame();
     }
 
     private static void newGame() throws FileNotFoundException {
         readMap();
-
-        int count = 0;
-        for(int i = 0;i<map.length;i++){
-            for(int j = 0;j<map[i].length;j++){
-                if(map[i][j]==0)count++;
-            }
-        }
-        System.out.println(count);
-
-        double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
-        int mapX,mapY;
 
         Thread checkDeath = new Thread(new CheckDeath());
         checkDeath.start();
@@ -204,96 +198,23 @@ public class MainGame {
         long oldTime = 0;
         boolean alive = true;
 
-        //Initial tutorial
-//        if(start){
-//            organisms.add(new Walker(138,61,0,0,30,1));
-//            organisms.add(new Plant(137,62,30));
-//        }
-
+        int currentX = 0;
         while(alive&&!win){
             for(int x = 0;x<window.getWidth();x++){
-                //calculate ray position and direction
-                cameraX = 2 * x/(double)window.getWidth() - 1; //x-coordinate in camera space
-                rayPosX = player.getX();
-                rayPosY = player.getY();
-                rayDirX = player.getDirX() + planeX*cameraX;
-                rayDirY = player.getDirY() + planeY*cameraX;
-
-                //which box of the map we're in
-                mapX = (int) rayPosX;
-                mapY = (int) rayPosY;
-
-                //length of ray from current position to next x or y-side
-                double sideDistX;
-                double sideDistY;
-
-                //length of ray from one x or y-side to next x or y-side
-                double deltaDistX = Math.sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
-                double deltaDistY = Math.sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
-                double perpWallDist;
-
-                //what direction to step in x or y-direction (either +1 or -1)
-                int stepX;
-                int stepY;
-
-                int hit = 0; //determine wall hit
-                int side = 0; //NS or a EW wall hit
-
-                //calculate step and initial sideDist
-                if (rayDirX < 0){
-                    stepX = -1;
-                    sideDistX = (rayPosX - mapX) * deltaDistX;
-                }else{
-                    stepX = 1;
-                    sideDistX = (mapX + 1.0 - rayPosX) * deltaDistX;
+                int[]rayCast = rayCasting(x);
+                for(int i = 0;i<rayCast.length;i++){
+                    walLines[x][i] = rayCast[i];
                 }
-                if (rayDirY < 0){
-                    stepY = -1;
-                    sideDistY = (rayPosY - mapY) * deltaDistY;
-                }else{
-                    stepY = 1;
-                    sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
-                }
-                //DDA algorithm
-                while(hit==0){
-                    //jump to next map square, OR in x-direction, OR in y-direction
-                    if (sideDistX < sideDistY){
-                        sideDistX += deltaDistX;
-                        mapX += stepX;
-                        side = 0;
-                    }else{
-                        sideDistY += deltaDistY;
-                        mapY += stepY;
-                        side = 1;
-                    }
-                    //if ray has hit a wall, hit=1 to stop the loop
-                    if (map[mapX][mapY]  != 0){
-                        hit = 1;
-                    }
-                }
-
-                //Calculate distance projected on camera direction
-                if(side==0){
-                    perpWallDist = (mapX - rayPosX + (1-stepX) / 2) / rayDirX;
-                }else{
-                    perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
-                }
-
-                //Calculate height of line to draw on screen
-                int lineHeight = (int)(window.getHeight() / perpWallDist);
-                //calculate lowest and highest pixel to fill in current stripe
-                int drawStart = -lineHeight / 2 + window.getHeight() / 2;
-                if(drawStart < 0){
-                    drawStart = 0;
-                }
-                int drawEnd = lineHeight / 2 + window.getHeight() / 2;
-                if(drawEnd >= window.getHeight()){
-                    drawEnd = window.getHeight() - 1;
-                }
-                walLines[x][0] = drawStart;
-                walLines[x][1] = drawEnd;
-                walLines[x][2] = map[mapX][mapY];
-                walLines[x][3] = side;
+//                currentX = x;
+//                do{
+//                    x++;
+////                    System.out.println(currentX+" "+x+" "+rayCasting(x)[4]+" "+walLines[currentX][4]+" "+(x<Math.min(window.getWidth(),currentX+800))+" "+(rayCasting(x)[4]-walLines[currentX][4]));
+//                }while(x<Math.min(window.getWidth(),currentX+800)&&rayCasting(x)[4]-walLines[currentX][4]!=1);
+////                System.out.println("end!!");
+//                if(rayCasting(x)[4]-walLines[currentX][4]!=0){
+//                    System.out.println(currentX+" "+x);
+//                    walLines[currentX][5] = x;
+//                }
             }
             updateMovement();
             window.repaint();
@@ -311,7 +232,6 @@ public class MainGame {
                 }else{
                     int walkerNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*4000/(deltaSecond(startTime)+100) );
                     int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
-//                    System.out.println(deltaSecond(startTime));
                     spawn(walkerNum,plantNum);
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
                     spawnTime = 60;
@@ -337,6 +257,91 @@ public class MainGame {
         //After jumping out of loop, create new JFrame and stop theme music
         gameMusic.close();
         endGameScreen();
+    }
+
+    public static int[] rayCasting(int x){
+        double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
+        int mapX,mapY;
+        //calculate ray position and direction
+        cameraX = 2 * x/(double)window.getWidth() - 1; //x-coordinate in camera space
+        rayPosX = player.getX();
+        rayPosY = player.getY();
+        rayDirX = player.getDirX() + planeX*cameraX;
+        rayDirY = player.getDirY() + planeY*cameraX;
+
+        //which box of the map we're in
+        mapX = (int) rayPosX;
+        mapY = (int) rayPosY;
+
+        //length of ray from current position to next x or y-side
+        double sideDistX;
+        double sideDistY;
+
+        //length of ray from one x or y-side to next x or y-side
+        double deltaDistX = Math.sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
+        double deltaDistY = Math.sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
+        double perpWallDist;
+
+        //what direction to step in x or y-direction (either +1 or -1)
+        int stepX;
+        int stepY;
+
+        int hit = 0; //determine wall hit
+        int side = 0; //NS or a EW wall hit
+
+        //calculate step and initial sideDist
+        if (rayDirX < 0){
+            stepX = -1;
+            sideDistX = (rayPosX - mapX) * deltaDistX;
+        }else{
+            stepX = 1;
+            sideDistX = (mapX + 1.0 - rayPosX) * deltaDistX;
+        }
+        if (rayDirY < 0){
+            stepY = -1;
+            sideDistY = (rayPosY - mapY) * deltaDistY;
+        }else{
+            stepY = 1;
+            sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
+        }
+        //DDA algorithm
+        while(hit==0){
+            //jump to next map square, OR in x-direction, OR in y-direction
+            if (sideDistX < sideDistY){
+                sideDistX += deltaDistX;
+                mapX += stepX;
+                side = 0;
+            }else{
+                sideDistY += deltaDistY;
+                mapY += stepY;
+                side = 1;
+            }
+            //if ray has hit a wall, hit=1 to stop the loop
+            if (map[mapX][mapY]  != 0){
+                hit = 1;
+            }
+        }
+//        System.out.println(map[mapX][mapY]+" "+mapX+" "+mapY);
+
+        //Calculate distance projected on camera direction
+        if(side==0){
+            perpWallDist = (mapX - rayPosX + (1-stepX) / 2) / rayDirX;
+        }else{
+            perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
+        }
+
+        //Calculate height of line to draw on screen
+        int lineHeight = (int)(window.getHeight() / perpWallDist);
+        //calculate lowest and highest pixel to fill in current stripe
+        int drawStart = -lineHeight / 2 + window.getHeight() / 2;
+        if(drawStart < 0){
+            drawStart = 0;
+        }
+        int drawEnd = lineHeight / 2 + window.getHeight() / 2;
+        if(drawEnd >= window.getHeight()){
+            drawEnd = window.getHeight() - 1;
+        }
+        return new int[]{drawStart,drawEnd,map[mapX][mapY],side};
     }
 
     public static void spawn(int walkerNum,int plantNum){
@@ -391,6 +396,7 @@ public class MainGame {
     }
 
     public static class World extends JPanel {
+        public int count = 0,pixPerColorY = 0,pixPerColorX = 0;
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
@@ -402,6 +408,16 @@ public class MainGame {
                 }else{
                     g.setColor(new Color(160,160,160));
                 }
+//                pixPerColorY = (walLines[x][1]-walLines[x][0])/64;
+//                pixPerColorX = (walLines[x][5]-x)/64;
+////                System.out.println(pixPerColorX+" "+pixPerColorY);
+//                for(int i = walLines[x][0];i<walLines[x][1];i+=pixPerColorY){
+//                    if(count==4096)count = 0;
+//                    g.setColor(new Color(wall.pixels[count]));
+////                    g.drawRect(x,i,x+pixPerColorX,i+pixPerColorY);
+//                    g.drawLine(x,i,x,i+pixPerColorY);
+//                    count++;
+//                }
                 //Wall
                 g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 if(walLines[x][2]==2){
@@ -538,6 +554,8 @@ public class MainGame {
      * This method  is for reconstructing the game playing screen after the user lost
      **/
     private static void endGameScreen(){
+
+        gameMusic.close();
 
         //Save the score
         if(win){
@@ -693,6 +711,7 @@ public class MainGame {
     static class returnListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             menuFrame3.dispose();
+            System.exit(0);
         }
     }
 

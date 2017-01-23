@@ -234,7 +234,7 @@ public class MainGame {
                     int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
                     spawn(walkerNum,plantNum);
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
-                    spawnTime = 10;
+                    spawnTime = 60;
                 }
                 if(CheckCollision.attackTime > 0){
                     CheckCollision.attackTime-= 0.5;

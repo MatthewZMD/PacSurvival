@@ -251,6 +251,7 @@ public class MainGame {
                 }
 
                 //TODO Jim add comments
+                //Add c
                 if(CheckCollision.attackTime > 0){
                     CheckCollision.attackTime-= 0.5;
                 }
@@ -262,6 +263,8 @@ public class MainGame {
                 }
                 if(CheckCollision.plantReceivedTime > 0){
                     CheckCollision.plantReceivedTime-= 0.5;
+                }if(CheckCollision.fakePlantReceivedTime > 0){
+                    CheckCollision.fakePlantReceivedTime-= 0.5;
                 }
                 //Set oldTime to current time
                 oldTime = System.nanoTime();

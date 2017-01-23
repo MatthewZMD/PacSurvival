@@ -1,18 +1,20 @@
 /* [CheckCollision.java]
- * A Small program for leaderboard information
+ * A Small program to check position information
  * @author Matthew & Jim
  */
 
 public class CheckCollision implements Runnable{
 
-  public static double collideTime, attackTime, walkerDiedTime, plantReceivedTime;
+  public static double collideTime, attackTime, walkerDiedTime, plantReceivedTime, fakePlantReceivedTime;
 
   public synchronized void run() {
     while(true){
+      //Check if collision happens with plants
       if(MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]==3){
           for(int i = 0; i < MainGame.organisms.size(); i++){
               Organism o = MainGame.organisms.get(i);
               if(i==MainGame.organisms.size()-1){
+                  fakePlantReceivedTime=3;
                   System.out.println("Fake Plant!");
                   //TODO Display Fake Plant
                   MainGame.map[(int) MainGame.player.getX()][(int) MainGame.player.getY()]=0;
@@ -22,6 +24,7 @@ public class CheckCollision implements Runnable{
       for(int i = 0; i < MainGame.organisms.size(); i++){
         Organism o = MainGame.organisms.get(i);
         if (o!=null&&Math.floor(MainGame.player.getY()) >= o.getX()-0.5 && Math.floor(MainGame.player.getY()) <= o.getX()+0.5 && Math.floor(MainGame.player.getX()) >= o.getY()-0.5 && Math.floor(MainGame.player.getX()) <= o.getY()+0.5) {
+          //Check if collided with walker
           if (o instanceof Walker) {
             if (MainGame.plantRemainTime > 0) {
               System.out.print("You attacked the Walker at " + o.getX() + "," + o.getY() + "! ");
@@ -29,6 +32,7 @@ public class CheckCollision implements Runnable{
               System.out.println("Walker remaining health: "+((Walker) o).getHealth());
               attackTime=3;
               if(((Walker) o).getHealth()<=0){
+                //Case where the walker dies from too many player attack
                 MainGame.map[(int) o.getY()][(int) o.getX()] = MainGame.map[(int) o.getY()][(int) o.getX()] == 2 ? 0:3;
                 MainGame.organisms.remove(i);
                 System.out.println("Walker died");
@@ -53,11 +57,6 @@ public class CheckCollision implements Runnable{
             e.printStackTrace();
           }
         }
-//                }catch(Exception e){
-//                    System.out.println(o);
-//                    System.out.println(o.getX());
-//                    e.printStackTrace();
-//                }
 
       }
       try{

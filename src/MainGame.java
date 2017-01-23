@@ -28,7 +28,7 @@ public class MainGame {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 0.1, plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 5, plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
     public static boolean win = false;
@@ -55,6 +55,8 @@ public class MainGame {
     //Below starts the methods (screens)
     //Main method
     public static void main(String[] args) throws Exception {
+        readMap();
+
         /****************Frame 1******/
         menuFrame = new JFrame("Survival");
 
@@ -140,8 +142,8 @@ public class MainGame {
         JLabel instruction7 = new JLabel("  And you will receive a Plant Buff for a limited amount of time.");
         JLabel instruction8 = new JLabel("  The Plant Buff enables you to attack the Walkers instead of ");
         JLabel instruction9 = new JLabel("  the Walkers damaging you while you are in contact with them.");
-        JLabel instruction10 = new JLabel("  However there are Fake Plants in the maze that bring no benefits.");
-        JLabel instruction11 = new JLabel("  They're only intended to mislead you to an unknown destination.");
+        JLabel instruction10 = new JLabel("  However if a Walker walks onto a Plant, they combine and form Yellow,");
+        JLabel instruction11 = new JLabel("  then the Plant becomes a Fake Plant which brings no benefit to you.");
         JLabel title2 = new JLabel("        Please enter your name to begin: ");
         name = new JTextField(100);
 
@@ -186,8 +188,6 @@ public class MainGame {
     }
 
     private static void newGame() throws FileNotFoundException {
-        readMap();
-
         Thread checkDeath = new Thread(new CheckDeath());
         checkDeath.start();
         Thread checkCollision = new Thread(new CheckCollision());
@@ -234,7 +234,7 @@ public class MainGame {
                     int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
                     spawn(walkerNum,plantNum);
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
-                    spawnTime = 60;
+                    spawnTime = 10;
                 }
                 if(CheckCollision.attackTime > 0){
                     CheckCollision.attackTime-= 0.5;
@@ -351,7 +351,7 @@ public class MainGame {
                 x = (int) (Math.random() * map[0].length);
                 y = (int) (Math.random() * map.length);
             }while(map[y][x]==1||map[y][x]==2||map[y][x]==4);
-            organisms.add(new Walker(x,y,-1,0, 300,(int) (Math.random()*2+1)));
+            organisms.add(new Walker(x,y,-1,0, 300));
 //            map[y][x] = map[y][x]==0 ? 2:4;
         }
         for(int p = 0;p<plantNum;p++){

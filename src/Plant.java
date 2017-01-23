@@ -1,6 +1,6 @@
 /* [Plant.java]
  * A Small program for Plant settings and information
- * @author Matthew
+ * @author Jim & Matthew
  */
 
 public class Plant extends Organism{

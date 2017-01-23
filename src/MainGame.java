@@ -1,3 +1,4 @@
+//Import from java libraries
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -8,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
 
+/*[MainGame.java]
+ *Runs the game, GUI panes and Displays scores
+ * @author jim and matthew
+ */
 public class MainGame {
     //Declare Variables
     public static int[][] map, walLines;
@@ -38,12 +43,16 @@ public class MainGame {
     private static String playerName;
     private static JTextField name;
     private static int totalScore;
+
+    //Declare images that will be used throughout the game
     private static Image dbImage;
     private static ImageIcon icon = new ImageIcon("gameIcon.png");
 
     //Start variable, move variables
+    //Declare booleans that will be used for detecting keyboard presses
     public static boolean start = false,left,right,up,down;
-    //Music clip
+
+    //Declare Clip music that will be played in the game
     public static Clip gameMusic;
 
     /**
@@ -242,6 +251,7 @@ public class MainGame {
                 }
 
                 //TODO Jim add comments
+                //Add c
                 if(CheckCollision.attackTime > 0){
                     CheckCollision.attackTime-= 0.5;
                 }
@@ -253,6 +263,8 @@ public class MainGame {
                 }
                 if(CheckCollision.plantReceivedTime > 0){
                     CheckCollision.plantReceivedTime-= 0.5;
+                }if(CheckCollision.fakePlantReceivedTime > 0){
+                    CheckCollision.fakePlantReceivedTime-= 0.5;
                 }
                 //Set oldTime to current time
                 oldTime = System.nanoTime();
@@ -497,6 +509,9 @@ public class MainGame {
         }
     }
 
+    /**keyListener
+     * change variables as it detects key pressing
+     */
     public static class keyListener implements KeyListener {
         int factor = 10;
         @Override
@@ -520,6 +535,7 @@ public class MainGame {
         @Override
         public void keyTyped(KeyEvent e) {
         }
+        //Stop moving once key is released
         @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
@@ -540,6 +556,9 @@ public class MainGame {
 
     }
 
+    /**updateMovement()
+     * updates the player movement in speed, position and direction
+     */
     public static void updateMovement(){
         if(right){
             //both camera direction and camera plane are rotated
@@ -753,7 +772,7 @@ public class MainGame {
     /******************PART C: MISCELLALIOUS METHOD**************/
     /**
      * setUIFont
-     * set the font for java swing
+     * set the default font for java GUI labels
      */
     private static void setUIFont (javax.swing.plaf.FontUIResource f){
         Enumeration<Object> keys = UIManager.getDefaults().keys();

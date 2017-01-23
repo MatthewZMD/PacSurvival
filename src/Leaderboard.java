@@ -82,6 +82,7 @@ public class Leaderboard {
 					max = j;
 				}
 			}
+			//Swap biggest and current locations
 			Player placeholder = players.get(i);
 			players.set(i, players.get(max));
 			players.set(max, placeholder);

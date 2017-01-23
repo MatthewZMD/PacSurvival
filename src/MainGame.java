@@ -1,15 +1,9 @@
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
@@ -17,44 +11,48 @@ import java.util.Scanner;
 public class MainGame {
     //Declare Variables
     public static int[][] map, walLines;
-
-    public static JFrame window = new JFrame("Survival");
-    public static int screenWidth = 1280,screenHeight = 900,texWidth = 64,texHeight = 64;
-    public static World world = new World();
+    public static double remainTime = 60 * 5, plantRemainTime = 0,spawnTime = 0;
 
     //Create player object Win-4:194 Normal-65:137
     public static Player player = new Player("MT",65,137,-1,0);
 
-    //the 2d raycaster version of camera plane
+    //2d camera plane, move and rotation speeds
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 5, plantRemainTime = 0,spawnTime = 0;
+    //Start time of the game
     public static long startTime=0;
-
+    //Win variable
     public static boolean win = false;
 
+    //Arraylist that stores the walkers and plants
     public static ArrayList<Organism> organisms = new ArrayList<>();
-    private static Leaderboard test;
+    private static Leaderboard test;//leaderboard
 
+    //GUI
+    public static JFrame window = new JFrame("Survival");
+    public static int screenWidth = 1280,screenHeight = 900,texWidth = 64,texHeight = 64;
+    public static World world = new World();
     private static JButton startButton;
     private static JPanel contentPane;
     private static JFrame menuFrame, menuFrame2, menuFrame3;
     private static String playerName;
     private static JTextField name;
     private static int totalScore;
-
-    public static Texture wall = new Texture("wall.jpg");
-
     private static Image dbImage;
     private static ImageIcon icon = new ImageIcon("gameIcon.png");
 
+    //Start variable, move variables
     public static boolean start = false,left,right,up,down;
-
+    //Music clip
     public static Clip gameMusic;
 
-    //Below starts the methods (screens)
-    //Main method
+    /**
+     * Main method
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
+        //Read map file
         readMap();
 
         /****************Frame 1******/
@@ -121,7 +119,6 @@ public class MainGame {
         menuFrame.setFocusable(true);
 
         //**********Frame 2*****/
-
         menuFrame2 = new JFrame("Survival");
 
         //Set up the frame work
@@ -133,7 +130,7 @@ public class MainGame {
         startButton2.setBackground(Color.CYAN);
         startButton2.setFont(new Font("Georgia", Font.CENTER_BASELINE, 16));
         startButton2.addActionListener(new gameListener());
-        JLabel instruction1 = new JLabel("  The main objective is to find an exit in a limited time.");
+        JLabel instruction1 = new JLabel("  The main objective is to find the pink exit in a limited time.");
         JLabel instruction2 = new JLabel("  You'll see some blue-coloured blocks called Walkers");
         JLabel instruction3 = new JLabel("  Once you make contact with them, ");
         JLabel instruction4 = new JLabel("  your remaining time in maze will decrease, so be careful.");
@@ -181,61 +178,70 @@ public class MainGame {
         window.setVisible(false);
         walLines = new int[window.getWidth()][4];
 
-        wall.load();
-
         //Direct to beginning the new game
-        newGame();
+        game();
     }
 
-    private static void newGame() throws FileNotFoundException {
+    /**
+     * Game method
+     * @throws FileNotFoundException
+     */
+    private static void game() throws FileNotFoundException {
+        //Start check death thread
         Thread checkDeath = new Thread(new CheckDeath());
         checkDeath.start();
+        //Start check collision thread
         Thread checkCollision = new Thread(new CheckCollision());
         checkCollision.start();
+        //Start walker ai thread
         Thread walkerAI = new Thread(new WalkerAI());
         walkerAI.start();
 
+        //Declare old time and alive variables
         long oldTime = 0;
         boolean alive = true;
 
-        int currentX = 0;
+        //Game loop, loop until dead or win
         while(alive&&!win){
+            //Loop that runs the Raycasting algorithm
             for(int x = 0;x<window.getWidth();x++){
                 int[]rayCast = rayCasting(x);
                 for(int i = 0;i<rayCast.length;i++){
                     walLines[x][i] = rayCast[i];
                 }
-//                currentX = x;
-//                do{
-//                    x++;
-////                    System.out.println(currentX+" "+x+" "+rayCasting(x)[4]+" "+walLines[currentX][4]+" "+(x<Math.min(window.getWidth(),currentX+800))+" "+(rayCasting(x)[4]-walLines[currentX][4]));
-//                }while(x<Math.min(window.getWidth(),currentX+800)&&rayCasting(x)[4]-walLines[currentX][4]!=1);
-////                System.out.println("end!!");
-//                if(rayCasting(x)[4]-walLines[currentX][4]!=0){
-//                    System.out.println(currentX+" "+x);
-//                    walLines[currentX][5] = x;
-//                }
             }
+            //Update player's movement
             updateMovement();
+            //Repaint window
             window.repaint();
 
+            //Deducting time
             if(start&&oldTime==0){
+                //Start counting if game starts
                 startTime = System.nanoTime();
                 oldTime = System.nanoTime();
-            }else if(start&&deltaSecond(oldTime)==0.5){
-                remainTime-=0.5;
+            }else if(start&&deltaSecond(oldTime)==0.5){//if game started and 0.5s passed
+                remainTime-=0.5; //remaining time - 0.5
                 if(plantRemainTime>0){
+                    //If plant buff remaining time > 0, deduct 0.5
                     plantRemainTime-=0.5;
                 }
+                //If spawning time > 0, deduct 0.5
                 if(spawnTime>0){
                     spawnTime-=0.5;
                 }else{
+                    //if spawning time = 0, spawn walkers and plants
+                    //walkers and plants are spawned according to a lnx / x function
                     int walkerNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*4000/(deltaSecond(startTime)+100) );
                     int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
+                    //Spawn walkers and plants
                     spawn(walkerNum,plantNum);
+                    //Print spawned amount
                     System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
-                    spawnTime = 60;
+                    spawnTime = 60; //Set spawn time to 60s
                 }
+
+                //TODO Jim add comments
                 if(CheckCollision.attackTime > 0){
                     CheckCollision.attackTime-= 0.5;
                 }
@@ -248,45 +254,54 @@ public class MainGame {
                 if(CheckCollision.plantReceivedTime > 0){
                     CheckCollision.plantReceivedTime-= 0.5;
                 }
+                //Set oldTime to current time
                 oldTime = System.nanoTime();
             }
-//            System.out.println(player.getX()+" "+player.getY());
             alive = remainTime>0; //End when remain time <= 0
-            win = map[(int) player.getX()][(int)player.getY()]==8;
+            win = map[(int) player.getX()][(int)player.getY()]==8; //Determine if the player walks onto winning position
         }
-        //After jumping out of loop, create new JFrame and stop theme music
+        //After jumping out of loop, create new JFrame and stop game music
         gameMusic.close();
         endGameScreen();
     }
 
+    /**
+     * Raycasting algorithm
+     * @param x x-coordinate on the window
+     * @return array consisting y1 and y2 position to draw the lines on the window and value in the destination and the side
+     */
     public static int[] rayCasting(int x){
+        //Declare variables
         double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
         int mapX,mapY;
         //calculate ray position and direction
-        cameraX = 2 * x/(double)window.getWidth() - 1; //x-coordinate in camera space
+        //x-coordinate in camera
+        cameraX = 2 * x/(double)window.getWidth() - 1;
+        //Ray positions
         rayPosX = player.getX();
         rayPosY = player.getY();
+        //Direction of the ray
         rayDirX = player.getDirX() + planeX*cameraX;
         rayDirY = player.getDirY() + planeY*cameraX;
 
-        //which box of the map we're in
+        //the box on the map
         mapX = (int) rayPosX;
         mapY = (int) rayPosY;
 
-        //length of ray from current position to next x or y-side
+        //ray length from current position to next side
         double sideDistX;
         double sideDistY;
 
-        //length of ray from one x or y-side to next x or y-side
+        //ray length from one x/y side to next x/y side
         double deltaDistX = Math.sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
         double deltaDistY = Math.sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
-        double perpWallDist;
+        double perpWallDist; //Perpendicular wall distance
 
-        //what direction to step in x or y-direction (either +1 or -1)
+        //Direction to move
         int stepX;
         int stepY;
 
-        int hit = 0; //determine wall hit
+        boolean hit = false; //determine wall hit
         int side = 0; //NS or a EW wall hit
 
         //calculate step and initial sideDist
@@ -305,8 +320,8 @@ public class MainGame {
             sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
         }
         //DDA algorithm
-        while(hit==0){
-            //jump to next map square, OR in x-direction, OR in y-direction
+        while(!hit){
+            //jump to next map square
             if (sideDistX < sideDistY){
                 sideDistX += deltaDistX;
                 mapX += stepX;
@@ -316,129 +331,143 @@ public class MainGame {
                 mapY += stepY;
                 side = 1;
             }
-            //if ray has hit a wall, hit=1 to stop the loop
-            if (map[mapX][mapY]  != 0){
-                hit = 1;
-            }
+            //determine whether ray has hit a wall
+            hit = map[mapX][mapY]  != 0;
         }
-//        System.out.println(map[mapX][mapY]+" "+mapX+" "+mapY);
-
-        //Calculate distance projected on camera direction
+        //Calculate distance projected on screen
         if(side==0){
             perpWallDist = (mapX - rayPosX + (1-stepX) / 2) / rayDirX;
         }else{
             perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
         }
 
-        //Calculate height of line to draw on screen
+        //Calculate line height
         int lineHeight = (int)(window.getHeight() / perpWallDist);
-        //calculate lowest and highest pixel to fill in current stripe
+        //calculate lowest and highest pixel of the line
         int drawStart = -lineHeight / 2 + window.getHeight() / 2;
+        //Set drawStart to 0 if it went out of the screen
         if(drawStart < 0){
             drawStart = 0;
         }
         int drawEnd = lineHeight / 2 + window.getHeight() / 2;
+        //Set drawEnd to window height -1 if it went out of the screen
         if(drawEnd >= window.getHeight()){
             drawEnd = window.getHeight() - 1;
         }
+
+        //Return the array consisting y1 and y2 position to draw the lines on the window and value in the destination and the side
         return new int[]{drawStart,drawEnd,map[mapX][mapY],side};
     }
 
+    /**
+     * Spawning walkers and plants method
+     * @param walkerNum walker number to be spawned
+     * @param plantNum plant number to be spawned
+     */
     public static void spawn(int walkerNum,int plantNum){
         int x,y;
+        //Spawn walkers
         for(int w = 0;w<walkerNum;w++){
+            //Determine an empty x,y coordinate for the walker to spawn
             do {
                 x = (int) (Math.random() * map[0].length);
                 y = (int) (Math.random() * map.length);
             }while(map[y][x]==1||map[y][x]==2||map[y][x]==4);
+            //Create walker object and add to the arraylist
             organisms.add(new Walker(x,y,-1,0, 300));
-//            map[y][x] = map[y][x]==0 ? 2:4;
         }
         for(int p = 0;p<plantNum;p++){
+            //Determine an empty x,y coordinate for the plant to spawn
             do {
                 x = (int) (Math.random() * map[0].length);
                 y = (int) (Math.random() * map.length);
             }while(map[y][x]==1||map[y][x]==3||map[y][x]==4);
+            //Create plant object and add to the arraylist
             organisms.add(new Plant(x,y,180));
-//            map[y][x] = map[y][x]==0 ? 3:4;
         }
-//        System.out.println("Spawned");
     }
 
+    /**
+     * Read the map.txt file method
+     * @throws FileNotFoundException
+     */
     public static void readMap() throws FileNotFoundException {
+        //Create scanner
         Scanner mapFile = new Scanner(new File("Map.txt"));
         String line;
+        //Determine the width and height of the map
         int width = 0,height = 0;
         do{
             line = mapFile.nextLine();
-//            System.out.println(line);
             height++;
         }while (mapFile.hasNextLine());
         width = line.length();
-//        System.out.println(width+"x"+height);
+        //Initialize map array
         map = new int[height][width];
+        //Recreate the scanner
         mapFile = new Scanner(new File("Map.txt"));
+        //Add the map info into the array
         for(int i = 0;i<height;i++){
             line = mapFile.nextLine();
             for(int j = 0;j<width;j++){
                 map[i][j] = Character.getNumericValue(line.charAt(j));
-//                System.out.print(map[i][j]);
             }
-//            System.out.println();
         }
     }
 
+    /**
+     * This method calculates the elapsed seconds that passed given a time
+     * @param oldTime the time that will be used to calculate the elapsed seconds
+     * @return seconds in double and round to 1 decimal place
+     */
     public static double deltaSecond(long oldTime){
+        //Determine current time
         long currentTime = System.nanoTime();
+        //Calculate the elapsed seconds
         double elapsed = (currentTime - oldTime) /1000000000.0;
+        //Round to 1 decimal place and return it
         double round = Math.round(elapsed * 10);
         return round/10;
     }
 
+    /**
+     * World subclass used to draw the graphics onto the window
+     */
     public static class World extends JPanel {
-        public int count = 0,pixPerColorY = 0,pixPerColorX = 0;
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
+            //Loop through the walLines loop storing the info to be drawn
             for(int x = 0;x<walLines.length;x++){
-//                for(int y = 0;y<2;y++){
-                //g.drawImage(dbImage, 0, 0, getWidth(), getHeight(), this);
-                if(walLines[x][3]==1){
-                    g.setColor(new Color(64,64,64));
-                }else{
-                    g.setColor(new Color(160,160,160));
-                }
-//                pixPerColorY = (walLines[x][1]-walLines[x][0])/64;
-//                pixPerColorX = (walLines[x][5]-x)/64;
-////                System.out.println(pixPerColorX+" "+pixPerColorY);
-//                for(int i = walLines[x][0];i<walLines[x][1];i+=pixPerColorY){
-//                    if(count==4096)count = 0;
-//                    g.setColor(new Color(wall.pixels[count]));
-////                    g.drawRect(x,i,x+pixPerColorX,i+pixPerColorY);
-//                    g.drawLine(x,i,x,i+pixPerColorY);
-//                    count++;
-//                }
-                //Wall
-                g.drawLine(x,walLines[x][0],x,walLines[x][1]);
-                if(walLines[x][2]==2){
-                    //Walker
+                if(walLines[x][2]==1){
+                    //Color difference for different side of the wall
+                    if(walLines[x][3]==1){
+                        g.setColor(new Color(64,64,64));
+                    }else{
+                        g.setColor(new Color(160,160,160));
+                    }
+                    //Draw a Wall if it's 1
+                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
+                }else if(walLines[x][2]==2){
+                    //Draw a Walker if it's 2
                     g.setColor(Color.BLUE);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }else if(walLines[x][2]==3){
-                    //Plant
+                    //Draw a Plant if it's 3
                     g.setColor(Color.GREEN);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }else if(walLines[x][2]==4){
-                    //Mixed
+                    //Draw Yellow if it's Mixed - 4
                     g.setColor(Color.YELLOW);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }else if(walLines[x][2]==8){
-                    //Exit
+                    //Pink is the exit
                     g.setColor(Color.PINK);
                     g.drawLine(x,walLines[x][0],x,walLines[x][1]);
                 }
 //                }
             }
+            //Set color to red
             g.setColor(Color.RED);
             g.setFont(new Font("Georgia", Font.BOLD, 30));
             g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);

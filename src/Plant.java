@@ -5,6 +5,7 @@
 
 public class Plant extends Organism{
 
+  //Declare class variables
   private int health;
   private long countTime;
 

@@ -50,10 +50,11 @@ public class Leaderboard {
 			//Add the new player at the end of arraylist
 			players.add(new Player(name,0,0,0,0));
 			players.get(i).setScore(score);
+            players = sortAndGet();
 			
 			//Reprint the list storage file with one new player in the arraylist
 			PrintWriter reWrite = new PrintWriter(new java.io.File("Leaderboard.txt"));
-			for(int j = 0; j < i; j++){
+			for(int j = 0; j < 10; j++){
 				reWrite.println(players.get(j).getName()+","+players.get(j).getScore());
 			}
 			reWrite.println(name+","+score);

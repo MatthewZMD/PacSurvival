@@ -27,7 +27,7 @@ public class MainGame {
     //the 2d raycaster version of camera plane
     public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
 
-    public static double remainTime = 60 * 5, plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 0.2, plantRemainTime = 0,spawnTime = 0;
     public static long startTime=0;
 
     public static boolean win = false;

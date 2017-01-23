@@ -1,4 +1,5 @@
 //Import from java libraries
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -16,16 +17,16 @@ import java.util.Scanner;
 public class MainGame {
     //Declare Variables
     public static int[][] map, walLines;
-    public static double remainTime = 60 * 5, plantRemainTime = 0,spawnTime = 0;
+    public static double remainTime = 60 * 5, plantRemainTime = 0, spawnTime = 0;
 
     //Create player object Win-4:194 Normal-65:137
-    public static Player player = new Player("MT",65,137,-1,0);
+    public static Player player = new Player("MT", 65, 137, -1, 0);
 
     //2d camera plane, move and rotation speeds
-    public static double planeX = 0, planeY = 0.66,moveSpeed = 0.0002,rotSpeed = 0.0001;
+    public static double planeX = 0, planeY = 0.66, moveSpeed = 0.0002, rotSpeed = 0.0001;
 
     //Start time of the game
-    public static long startTime=0;
+    public static long startTime = 0;
     //Win variable
     public static boolean win = false;
 
@@ -35,7 +36,7 @@ public class MainGame {
 
     //GUI
     public static JFrame window = new JFrame("Survival");
-    public static int screenWidth = 1280,screenHeight = 900,texWidth = 64,texHeight = 64;
+    public static int screenWidth = 1280, screenHeight = 900, texWidth = 64, texHeight = 64;
     public static World world = new World();
     private static JButton startButton;
     private static JPanel contentPane;
@@ -50,13 +51,14 @@ public class MainGame {
 
     //Start variable, move variables
     //Declare booleans that will be used for detecting keyboard presses
-    public static boolean start = false,left,right,up,down;
+    public static boolean start = false, left, right, up, down;
 
     //Declare Clip music that will be played in the game
     public static Clip gameMusic;
 
     /**
      * Main method
+     *
      * @param args
      * @throws Exception
      */
@@ -76,11 +78,11 @@ public class MainGame {
         dbImage = ImageIO.read(new File("displayBackground2.jpg"));
 
         //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Georgia",Font.CENTER_BASELINE,15));
+        setUIFont(new javax.swing.plaf.FontUIResource("Georgia", Font.CENTER_BASELINE, 15));
 
         //Set up the frame work
         contentPane = new SpecialPanel();
-        contentPane.setLayout(new GridLayout(2,2));
+        contentPane.setLayout(new GridLayout(2, 2));
 
         //Create item
         startButton = new JButton("Start");
@@ -120,7 +122,7 @@ public class MainGame {
 
         //Final settings
         menuFrame.setIconImage(icon.getImage());
-        menuFrame.setSize(600,600);
+        menuFrame.setSize(600, 600);
         menuFrame.setContentPane(contentPane);
         menuFrame.getContentPane().setBackground(Color.cyan);
         menuFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -171,7 +173,7 @@ public class MainGame {
         contentPane2.add(startButton2);
 
         //Final menuFrame2 settings
-        menuFrame2.setSize(650,500);
+        menuFrame2.setSize(650, 500);
         menuFrame2.setIconImage(icon.getImage());
         menuFrame2.setContentPane(contentPane2);
         menuFrame2.getContentPane().setBackground(Color.cyan);
@@ -181,7 +183,7 @@ public class MainGame {
 
         /***Initial Game Window Settings*******/
         window.setIconImage(icon.getImage());
-        window.setSize(screenWidth,screenHeight);
+        window.setSize(screenWidth, screenHeight);
         window.getContentPane().add(world);
         window.addKeyListener(new keyListener());
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -195,6 +197,7 @@ public class MainGame {
 
     /**
      * Game method
+     *
      * @throws FileNotFoundException
      */
     private static void game() throws FileNotFoundException {
@@ -213,11 +216,11 @@ public class MainGame {
         boolean alive = true;
 
         //Game loop, loop until dead or win
-        while(alive&&!win){
+        while (alive && !win) {
             //Loop that runs the Raycasting algorithm
-            for(int x = 0;x<window.getWidth();x++){
-                int[]rayCast = rayCasting(x);
-                for(int i = 0;i<rayCast.length;i++){
+            for (int x = 0; x < window.getWidth(); x++) {
+                int[] rayCast = rayCasting(x);
+                for (int i = 0; i < rayCast.length; i++) {
                     walLines[x][i] = rayCast[i];
                 }
             }
@@ -227,54 +230,54 @@ public class MainGame {
             window.repaint();
 
             //Deducting time
-            if(start&&oldTime==0){
+            if (start && oldTime == 0) {
                 //Start counting if game starts
                 startTime = System.nanoTime();
                 oldTime = System.nanoTime();
-            }else if(start&&deltaSecond(oldTime)==0.5){//if game started and 0.5s passed
-                remainTime-=0.5; //remaining time - 0.5
-                if(plantRemainTime>0){
+            } else if (start && deltaSecond(oldTime) == 0.5) {//if game started and 0.5s passed
+                remainTime -= 0.5; //remaining time - 0.5
+                if (plantRemainTime > 0) {
                     //If plant buff remaining time > 0, deduct 0.5
-                    plantRemainTime-=0.5;
+                    plantRemainTime -= 0.5;
                 }
 
 
                 //If spawning time > 0, deduct 0.5
-                if(spawnTime>0){
-                    spawnTime-=0.5;
-                }else{
+                if (spawnTime > 0) {
+                    spawnTime -= 0.5;
+                } else {
                     //if spawning time = 0, spawn walkers and plants
                     //walkers and plants are spawned according to a lnx / x function
-                    int walkerNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*4000/(deltaSecond(startTime)+100) );
-                    int plantNum = (int) Math.round( Math.log(deltaSecond(startTime)+10)*3500/(deltaSecond(startTime)+100) );
+                    int walkerNum = (int) Math.round(Math.log(deltaSecond(startTime) + 10) * 4000 / (deltaSecond(startTime) + 100));
+                    int plantNum = (int) Math.round(Math.log(deltaSecond(startTime) + 10) * 3500 / (deltaSecond(startTime) + 100));
                     //Spawn walkers and plants
-                    spawn(walkerNum,plantNum);
+                    spawn(walkerNum, plantNum);
                     //Print spawned amount
-                    System.out.println("Spawned "+walkerNum+" Walkers and "+plantNum+" plants.");
+                    System.out.println("Spawned " + walkerNum + " Walkers and " + plantNum + " plants.");
                     spawnTime = 60; //Set spawn time to 60s
                 }
 
                 //Delete time once event occured
-                if(CheckCollision.attackTime > 0){
-                    CheckCollision.attackTime-= 0.5;
+                if (CheckCollision.attackTime > 0) {
+                    CheckCollision.attackTime -= 0.5;
                 }
-                if(CheckCollision.collideTime > 0){
-                    CheckCollision.collideTime-= 0.5;
+                if (CheckCollision.collideTime > 0) {
+                    CheckCollision.collideTime -= 0.5;
                 }
-                if(CheckCollision.walkerDiedTime > 0){
-                    CheckCollision.walkerDiedTime-= 0.5;
+                if (CheckCollision.walkerDiedTime > 0) {
+                    CheckCollision.walkerDiedTime -= 0.5;
                 }
-                if(CheckCollision.plantReceivedTime > 0){
-                    CheckCollision.plantReceivedTime-= 0.5;
+                if (CheckCollision.plantReceivedTime > 0) {
+                    CheckCollision.plantReceivedTime -= 0.5;
                 }
-                if(CheckCollision.fakePlantReceivedTime > 0){
-                    CheckCollision.fakePlantReceivedTime-= 0.5;
+                if (CheckCollision.fakePlantReceivedTime > 0) {
+                    CheckCollision.fakePlantReceivedTime -= 0.5;
                 }
                 //Set oldTime to current time
                 oldTime = System.nanoTime();
             }
-            alive = remainTime>0; //End when remain time <= 0
-            win = map[(int) player.getX()][(int)player.getY()]==8; //Determine if the player walks onto winning position
+            alive = remainTime > 0; //End when remain time <= 0
+            win = map[(int) player.getX()][(int) player.getY()] == 8; //Determine if the player walks onto winning position
         }
         //After jumping out of loop, create new JFrame and stop game music
         gameMusic.close();
@@ -283,22 +286,23 @@ public class MainGame {
 
     /**
      * Raycasting algorithm
+     *
      * @param x x-coordinate on the window
      * @return array consisting y1 and y2 position to draw the lines on the window and value in the destination and the side
      */
-    public static int[] rayCasting(int x){
+    public static int[] rayCasting(int x) {
         //Declare variables
-        double cameraX,rayPosX,rayPosY,rayDirX,rayDirY;
-        int mapX,mapY;
+        double cameraX, rayPosX, rayPosY, rayDirX, rayDirY;
+        int mapX, mapY;
         //calculate ray position and direction
         //x-coordinate in camera
-        cameraX = 2 * x/(double)window.getWidth() - 1;
+        cameraX = 2 * x / (double) window.getWidth() - 1;
         //Ray positions
         rayPosX = player.getX();
         rayPosY = player.getY();
         //Direction of the ray
-        rayDirX = player.getDirX() + planeX*cameraX;
-        rayDirY = player.getDirY() + planeY*cameraX;
+        rayDirX = player.getDirX() + planeX * cameraX;
+        rayDirY = player.getDirY() + planeY * cameraX;
 
         //the box on the map
         mapX = (int) rayPosX;
@@ -321,90 +325,92 @@ public class MainGame {
         int side = 0; //NS or a EW wall hit
 
         //calculate step and initial sideDist
-        if (rayDirX < 0){
+        if (rayDirX < 0) {
             stepX = -1;
             sideDistX = (rayPosX - mapX) * deltaDistX;
-        }else{
+        } else {
             stepX = 1;
             sideDistX = (mapX + 1.0 - rayPosX) * deltaDistX;
         }
-        if (rayDirY < 0){
+        if (rayDirY < 0) {
             stepY = -1;
             sideDistY = (rayPosY - mapY) * deltaDistY;
-        }else{
+        } else {
             stepY = 1;
             sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
         }
         //DDA algorithm
-        while(!hit){
+        while (!hit) {
             //jump to next map square
-            if (sideDistX < sideDistY){
+            if (sideDistX < sideDistY) {
                 sideDistX += deltaDistX;
                 mapX += stepX;
                 side = 0;
-            }else{
+            } else {
                 sideDistY += deltaDistY;
                 mapY += stepY;
                 side = 1;
             }
             //determine whether ray has hit a wall
-            hit = map[mapX][mapY]  != 0;
+            hit = map[mapX][mapY] != 0;
         }
         //Calculate distance projected on screen
-        if(side==0){
-            perpWallDist = (mapX - rayPosX + (1-stepX) / 2) / rayDirX;
-        }else{
+        if (side == 0) {
+            perpWallDist = (mapX - rayPosX + (1 - stepX) / 2) / rayDirX;
+        } else {
             perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
         }
 
         //Calculate line height
-        int lineHeight = (int)(window.getHeight() / perpWallDist);
+        int lineHeight = (int) (window.getHeight() / perpWallDist);
         //calculate lowest and highest pixel of the line
         int drawStart = -lineHeight / 2 + window.getHeight() / 2;
         //Set drawStart to 0 if it went out of the screen
-        if(drawStart < 0){
+        if (drawStart < 0) {
             drawStart = 0;
         }
         int drawEnd = lineHeight / 2 + window.getHeight() / 2;
         //Set drawEnd to window height -1 if it went out of the screen
-        if(drawEnd >= window.getHeight()){
+        if (drawEnd >= window.getHeight()) {
             drawEnd = window.getHeight() - 1;
         }
 
         //Return the array consisting y1 and y2 position to draw the lines on the window and value in the destination and the side
-        return new int[]{drawStart,drawEnd,map[mapX][mapY],side};
+        return new int[]{drawStart, drawEnd, map[mapX][mapY], side};
     }
 
     /**
      * Spawning walkers and plants method
+     *
      * @param walkerNum walker number to be spawned
-     * @param plantNum plant number to be spawned
+     * @param plantNum  plant number to be spawned
      */
-    public static void spawn(int walkerNum,int plantNum){
-        int x,y;
+    public static void spawn(int walkerNum, int plantNum) {
+        int x, y;
         //Spawn walkers
-        for(int w = 0;w<walkerNum;w++){
+        for (int w = 0; w < walkerNum; w++) {
             //Determine an empty x,y coordinate for the walker to spawn
             do {
                 x = (int) (Math.random() * map[0].length);
                 y = (int) (Math.random() * map.length);
-            }while(map[y][x]==1||map[y][x]==2||map[y][x]==4);
+            } while (map[y][x] == 1 || map[y][x] == 2 || map[y][x] == 4);
             //Create walker object and add to the arraylist
-            organisms.add(new Walker(x,y,-1,0, 300));
+            organisms.add(new Walker(x, y, -1, 0, 300));
         }
-        for(int p = 0;p<plantNum;p++){
+        for (int p = 0; p < plantNum; p++) {
             //Determine an empty x,y coordinate for the plant to spawn
             do {
                 x = (int) (Math.random() * map[0].length);
                 y = (int) (Math.random() * map.length);
-            }while(map[y][x]==1||map[y][x]==3||map[y][x]==4);
+            } while (map[y][x] == 1 || map[y][x] == 3 || map[y][x] == 4);
             //Create plant object and add to the arraylist
-            organisms.add(new Plant(x,y,180));
+            organisms.add(new Plant(x, y, 180));
         }
     }
 
     /**
      * Read the map.txt file method
+     *
      * @throws FileNotFoundException
      */
     public static void readMap() throws FileNotFoundException {
@@ -412,20 +418,20 @@ public class MainGame {
         Scanner mapFile = new Scanner(new File("Map.txt"));
         String line;
         //Determine the width and height of the map
-        int width = 0,height = 0;
-        do{
+        int width = 0, height = 0;
+        do {
             line = mapFile.nextLine();
             height++;
-        }while (mapFile.hasNextLine());
+        } while (mapFile.hasNextLine());
         width = line.length();
         //Initialize map array
         map = new int[height][width];
         //Recreate the scanner
         mapFile = new Scanner(new File("Map.txt"));
         //Add the map info into the array
-        for(int i = 0;i<height;i++){
+        for (int i = 0; i < height; i++) {
             line = mapFile.nextLine();
-            for(int j = 0;j<width;j++){
+            for (int j = 0; j < width; j++) {
                 map[i][j] = Character.getNumericValue(line.charAt(j));
             }
         }
@@ -433,17 +439,18 @@ public class MainGame {
 
     /**
      * This method calculates the elapsed seconds that passed given a time
+     *
      * @param oldTime the time that will be used to calculate the elapsed seconds
      * @return seconds in double and round to 1 decimal place
      */
-    public static double deltaSecond(long oldTime){
+    public static double deltaSecond(long oldTime) {
         //Determine current time
         long currentTime = System.nanoTime();
         //Calculate the elapsed seconds
-        double elapsed = (currentTime - oldTime) /1000000000.0;
+        double elapsed = (currentTime - oldTime) / 1000000000.0;
         //Round to 1 decimal place and return it
         double round = Math.round(elapsed * 10);
-        return round/10;
+        return round / 10;
     }
 
     /**
@@ -454,32 +461,32 @@ public class MainGame {
             super.paintComponent(g);
 
             //Loop through the walLines loop storing the info to be drawn
-            for(int x = 0;x<walLines.length;x++){
-                if(walLines[x][2]==1){
+            for (int x = 0; x < walLines.length; x++) {
+                if (walLines[x][2] == 1) {
                     //Color difference for different side of the wall
-                    if(walLines[x][3]==1){
-                        g.setColor(new Color(64,64,64));
-                    }else{
-                        g.setColor(new Color(160,160,160));
+                    if (walLines[x][3] == 1) {
+                        g.setColor(new Color(64, 64, 64));
+                    } else {
+                        g.setColor(new Color(160, 160, 160));
                     }
                     //Draw a Wall if it's 1
-                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
-                }else if(walLines[x][2]==2){
+                    g.drawLine(x, walLines[x][0], x, walLines[x][1]);
+                } else if (walLines[x][2] == 2) {
                     //Draw a Walker if it's 2
                     g.setColor(Color.BLUE);
-                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
-                }else if(walLines[x][2]==3){
+                    g.drawLine(x, walLines[x][0], x, walLines[x][1]);
+                } else if (walLines[x][2] == 3) {
                     //Draw a Plant if it's 3
                     g.setColor(Color.GREEN);
-                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
-                }else if(walLines[x][2]==4){
+                    g.drawLine(x, walLines[x][0], x, walLines[x][1]);
+                } else if (walLines[x][2] == 4) {
                     //Draw Yellow if it's Mixed - 4
                     g.setColor(Color.YELLOW);
-                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
-                }else if(walLines[x][2]==8){
+                    g.drawLine(x, walLines[x][0], x, walLines[x][1]);
+                } else if (walLines[x][2] == 8) {
                     //Pink is the exit
                     g.setColor(Color.PINK);
-                    g.drawLine(x,walLines[x][0],x,walLines[x][1]);
+                    g.drawLine(x, walLines[x][0], x, walLines[x][1]);
                 }
 //                }
             }
@@ -488,29 +495,29 @@ public class MainGame {
             //Create settings for notification strings
             g.setFont(new Font("Georgia", Font.BOLD, 30));
             //Display remaining life
-            g.drawString("Remaining Life: "+(int)remainTime+"s",0,30);
+            g.drawString("Remaining Life: " + (int) remainTime + "s", 0, 30);
             g.setFont(new Font("Georgia", Font.CENTER_BASELINE, 20));
-            if((int)plantRemainTime > 0){
+            if ((int) plantRemainTime > 0) {
                 //Display remaining buff if >0
-                g.drawString("Remaining Buff: "+(int)plantRemainTime+"s",0,60);
+                g.drawString("Remaining Buff: " + (int) plantRemainTime + "s", 0, 60);
             }
-            if(CheckCollision.collideTime > 0){
+            if (CheckCollision.collideTime > 0) {
                 //Display warning that a walker attacked you
                 g.drawString("A walker attacked you.", 0, 80);
             }
-            if(CheckCollision.attackTime > 0){
+            if (CheckCollision.attackTime > 0) {
                 //Display warning that you attacked a walker
                 g.drawString("You attacked a walker.", 0, 100);
             }
-            if(CheckCollision.walkerDiedTime > 0){
+            if (CheckCollision.walkerDiedTime > 0) {
                 //Prompt that a walker died
                 g.drawString("A walker died!", 0, 120);
             }
-            if(CheckCollision.plantReceivedTime > 0){
+            if (CheckCollision.plantReceivedTime > 0) {
                 //Prompt you ate a plant
                 g.drawString("You ate a plant!", 0, 140);
             }
-            if(CheckCollision.fakePlantReceivedTime > 0){
+            if (CheckCollision.fakePlantReceivedTime > 0) {
                 //Prompt you ate a fake plant
                 g.drawString("You ate a fake plant!", 0, 160);
             }
@@ -518,7 +525,8 @@ public class MainGame {
         }
     }
 
-    /**keyListener()
+    /**
+     * keyListener()
      * change variables as it detects key pressing
      */
     public static class keyListener implements KeyListener {
@@ -526,16 +534,16 @@ public class MainGame {
         public void keyPressed(KeyEvent e) {
             //Get the key pressed
             int key = e.getKeyCode();
-            if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_D){
+            if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
                 right = true;
             }
-            if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
+            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
                 left = true;
             }
-            if(key==KeyEvent.VK_UP||key==KeyEvent.VK_W){
+            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
                 up = true;
             }
-            if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
+            if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
                 down = true;
             }
         }
@@ -543,31 +551,33 @@ public class MainGame {
         @Override
         public void keyTyped(KeyEvent e) {
         }
+
         //Stop moving once key is released
         @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
-            if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_D){
+            if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
                 right = false;
             }
-            if(key==KeyEvent.VK_LEFT||key==KeyEvent.VK_A){
+            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
                 left = false;
             }
-            if(key==KeyEvent.VK_UP||key==KeyEvent.VK_W){
+            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
                 up = false;
             }
-            if(key==KeyEvent.VK_DOWN||key==KeyEvent.VK_S){
+            if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
                 down = false;
             }
         }
 
     }
 
-    /**updateMovement()
+    /**
+     * updateMovement()
      * updates the player movement in speed, position and direction
      */
-    public static void updateMovement(){
-        if(right){
+    public static void updateMovement() {
+        if (right) {
             //camera direction and camera plane are rotated to rotate right
             double oldDirX = player.getDirX();
             player.setDirX(player.getDirX() * Math.cos(-rotSpeed) - player.getDirY() * Math.sin(-rotSpeed));
@@ -576,7 +586,7 @@ public class MainGame {
             planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
             planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
         }
-        if(left){
+        if (left) {
             //camera direction and camera plane are rotated to rotate left
             double oldDirX = player.getDirX();
             player.setDirX(player.getDirX() * Math.cos(rotSpeed) - player.getDirY() * Math.sin(rotSpeed));
@@ -585,22 +595,22 @@ public class MainGame {
             planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
             planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
         }
-        if(up){
+        if (up) {
             //Move player forward
-            if(map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
-                player.setX(player.getX()+(player.getDirX()*moveSpeed));
+            if (map[(int) (player.getX() + player.getDirX() * moveSpeed)][(int) player.getY()] != 1) {
+                player.setX(player.getX() + (player.getDirX() * moveSpeed));
             }
-            if(map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] != 1){
-                player.setY(player.getY()+(player.getDirY()*moveSpeed));
+            if (map[(int) player.getX()][(int) (player.getY() + player.getDirY() * moveSpeed)] != 1) {
+                player.setY(player.getY() + (player.getDirY() * moveSpeed));
             }
         }
-        if(down){
+        if (down) {
             //Move player backwards
-            if(map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] != 1){
-                player.setX(player.getX()-(player.getDirX()*moveSpeed));
+            if (map[(int) (player.getX() - player.getDirX() * moveSpeed)][(int) player.getY()] != 1) {
+                player.setX(player.getX() - (player.getDirX() * moveSpeed));
             }
-            if(map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] != 1){
-                player.setY(player.getY()-(player.getDirY()*moveSpeed));
+            if (map[(int) player.getX()][(int) (player.getY() - player.getDirY() * moveSpeed)] != 1) {
+                player.setY(player.getY() - (player.getDirY() * moveSpeed));
             }
         }
     }
@@ -610,19 +620,20 @@ public class MainGame {
 
     /***************PART A: Methods of different menuFrame screens *********/
 
-    /**editGameScreen()
+    /**
+     * editGameScreen()
      * This method  is for reconstructing the game playing screen after the user lost
      **/
-    private static void endGameScreen(){
+    private static void endGameScreen() {
 
         //End game music
         gameMusic.close();
 
         //Save the score
-        if(win){
-            totalScore = (int)(1.5*deltaSecond(startTime));
-        }else{
-            totalScore = (int)deltaSecond(startTime);
+        if (win) {
+            totalScore = (int) (1.5 * deltaSecond(startTime));
+        } else {
+            totalScore = (int) deltaSecond(startTime);
         }
 
         //Create items
@@ -638,16 +649,16 @@ public class MainGame {
         endButton.addActionListener(new endListener());
 
         //Set Default Font
-        setUIFont(new javax.swing.plaf.FontUIResource("Georgia",Font.CENTER_BASELINE,20));
+        setUIFont(new javax.swing.plaf.FontUIResource("Georgia", Font.CENTER_BASELINE, 20));
         //Set up inner JPanel
         JPanel endGamePanel = new SpecialPanel();
         endGamePanel.setLayout(new GridLayout(3, 1));
         endGamePanel.add(new JLabel(" END OF THE GAME"));
-        endGamePanel.add(new JLabel(" "+playerName+" has survived for "+deltaSecond(startTime)+"s."));
+        endGamePanel.add(new JLabel(" " + playerName + " has survived for " + deltaSecond(startTime) + "s."));
         //Add JLabel depending on players' scenario
-        if(win){
+        if (win) {
             endGamePanel.add(new JLabel(" CONGRATS FOR SAVING THE MANKIND!"));
-        }else{
+        } else {
             endGamePanel.add(new JLabel(" Unfortunately, you lost... But you can try again"));
         }
 
@@ -674,7 +685,8 @@ public class MainGame {
 
     }
 
-    /**endScreen()
+    /**
+     * endScreen()
      * This method  is for displaying leaderboard + player score.
      **/
     private static void endScreen() {
@@ -691,15 +703,15 @@ public class MainGame {
         JButton returnButton = new JButton("Exit the Game");
         returnButton.setBackground(Color.cyan);
         returnButton.addActionListener(new returnListener());
-        JLabel title = new JLabel("   You have made a score of "+totalScore);
+        JLabel title = new JLabel("   You have made a score of " + totalScore);
         title.setFont(new Font("Georgia", Font.CENTER_BASELINE, 19));
 
         //Add items to sub jpanel
         JPanel board = new SpecialPanel();
         board.setLayout(new GridLayout(11, 1, 1, 10));
         board.add(new JLabel("Leaderboard: "));
-        for(int i = 0; i < 10; i++){
-            board.add(new JLabel((i+1)+"."+players.get(i).getName()+": "+players.get(i).getScore()));
+        for (int i = 0; i < 10; i++) {
+            board.add(new JLabel((i + 1) + "." + players.get(i).getName() + ": " + players.get(i).getScore()));
         }
 
         //Add items to JPanel
@@ -743,7 +755,7 @@ public class MainGame {
      */
     static class gameListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            if(!name.getText().equals("")){
+            if (!name.getText().equals("")) {
                 menuFrame2.dispose();
                 //Get the name of the player
                 playerName = name.getText();
@@ -784,13 +796,13 @@ public class MainGame {
      * setUIFont
      * set the default font for java GUI labels
      */
-    private static void setUIFont (javax.swing.plaf.FontUIResource f){
+    private static void setUIFont(javax.swing.plaf.FontUIResource f) {
         Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
-            Object value = UIManager.get (key);
+            Object value = UIManager.get(key);
             if (value != null && value instanceof javax.swing.plaf.FontUIResource)
-                UIManager.put (key, f);
+                UIManager.put(key, f);
         }
     }
 

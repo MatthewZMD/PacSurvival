@@ -3,47 +3,60 @@
  * @author Matthew
  */
 
-public class Walker extends Creature{
+public class Walker extends Creature {
 
-  //Declare Variables
-  private int health;
-  private long countTime;
+    //Declare Variables
+    private int health;
+    private long countTime;
 
     /**
-     * default constructor Walker
-     * @param x
-     * @param y
-     * @param dirX
-     * @param dirY
+     * Create a walker object
+     *
+     * @param x      position
+     * @param y      position
+     * @param dirX   direction
+     * @param dirY   direction
      * @param health
      */
-  Walker(double x, double y, double dirX, double dirY, double health) {
-    super(x, y, dirX, dirY);
-    updateHealth(health);
-    MainGame.map[(int) y][(int) x] = MainGame.map[(int) y][(int) x]==3 ? 4:2;
-    setCountTime(System.nanoTime());
-  }
+    Walker(double x, double y, double dirX, double dirY, double health) {
+        super(x, y, dirX, dirY);
+        updateHealth(health);
+        //Add the walker's position to the array
+        MainGame.map[(int) y][(int) x] = MainGame.map[(int) y][(int) x] == 3 ? 4 : 2;
+        setCountTime(System.nanoTime());
+    }
 
-  /**
-   * updateHealth
-   * get class variable health
-   * @param addHealth
-   */
-  public void updateHealth(double addHealth){
-    this.health+=addHealth;
-  }
+    /**
+     * updateHealth
+     * additional health to the walker
+     *
+     * @param addHealth additional health
+     */
+    public void updateHealth(double addHealth) {
+        this.health += addHealth;
+    }
 
-  //******************Getters and setters**********/
+    //******************Getters and setters**********/
 
-  public double getHealth(){
-    return this.health;
-  }
+    public double getHealth() {
+        return this.health;
+    }
 
-  public long getCountTime() {
-    return countTime;
-  }
+    /**
+     * Get the time counted
+     *
+     * @return the time counted
+     */
+    public long getCountTime() {
+        return countTime;
+    }
 
-  public void setCountTime(long countTime) {
-    this.countTime = countTime;
-  }
+    /**
+     * Set counted time
+     *
+     * @param countTime counted time
+     */
+    public void setCountTime(long countTime) {
+        this.countTime = countTime;
+    }
 }

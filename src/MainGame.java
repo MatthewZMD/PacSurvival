@@ -23,7 +23,7 @@ public class MainGame {
     public static Player player = new Player("MT", 65, 137, -1, 0);
 
     //2d camera plane, move and rotation speeds
-    public static double planeX = 0, planeY = 0.66, moveSpeed = 0.0002, rotSpeed = 0.0001;
+    public static double planeX = 0, planeY = 0.66, moveSpeed = 0.00035, rotSpeed = 0.0002;
 
     //Start time of the game
     public static long startTime = 0;
